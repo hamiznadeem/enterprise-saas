@@ -91,12 +91,18 @@ class AuthController extends Controller
 
     public function logoutAllDevices(Request $request)
     {
-        $admin = Auth::guard('platform')->user();
-        $killed = PlatformSessionService::killAllOtherSessions($admin->id);
-
-        return response()->json([
-            'success' => true,
-            'message' => "{$killed} other session(s) terminated.",
+        $request->validate([
+            'password' => 'required',
         ]);
+
+        $user = Auth::guard('platform')->user();
+
+        if (!Auth::guard('platform')->validate(['email' => $user->email, 'password' => $request->password])) {
+            return back()->withErrors(['password' => 'The provided password does not match our records.']);
+        }
+
+        $killed = PlatformSessionService::killAllOtherSessions($user->id);
+
+        return back()->with('status', "Successfully logged out of {$killed} other device(s).");
     }
 }

@@ -116,7 +116,7 @@ Route::get('/tenant/billing', function () {
 
 
 // Patients & Tokens Routes (Secure Group)
-Route::middleware(['auth', 'tenant.identifier', 'trial'])->group(function () {
+Route::middleware(['auth', 'active.user', 'tenant.identifier', 'trial'])->group(function () {
     
     // Patient Routes
     Route::get('/patients', [App\Http\Controllers\PatientController::class, 'index'])->name('patients.index');

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Tenant;
+use App\Models\TenantActivityLog;
 use App\Services\AccountLockService;
 use App\Services\LoginLogService;
-use App\Services\TenantActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -100,21 +100,23 @@ class AuthController extends Controller
         LoginLogService::logSuccess($request, $user);
         $request->session()->regenerate();
 
-        //  Activity Logs
-        \App\Models\TenantActivityLog::create([
-            'tenant_id' => $user->tenant_id,
-            'user_id' => $user->id,
-            'action' => 'login',
+        // Activity log — Direct create because tenant.identifier middleware
+        // doesn't run on this public route, so TenantActivityService
+        // won't be able to resolve tenant_id automatically
+        TenantActivityLog::create([
+            'tenant_id'   => $user->tenant_id,
+            'user_id'     => $user->id,
+            'action'      => 'login',
             'description' => 'User logged in',
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
+            'ip_address'  => $request->ip(),
+            'user_agent'  => $request->userAgent(),
         ]);
 
-        // JSON response for AJAX/Fetch, Redirect for standard form
+        // JSON for AJAX/Fetch, Redirect for standard form
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'redirect' => route('tenant.dashboard')
+                'redirect' => route('tenant.dashboard'),
             ]);
         }
 
@@ -123,25 +125,26 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // ✅ Pehle user info capture karo
+        // Capture user info BEFORE logout (auth() won't work after)
         $userId = auth()->id();
         $tenantId = auth()->user()?->tenant_id;
 
-        // ✅ Phir manually log karo (trait bypass)
+        // Activity log — same reason as login, direct create
         if ($userId && $tenantId) {
-            \App\Models\TenantActivityLog::create([
-                'tenant_id' => $tenantId,
-                'user_id' => $userId,
-                'action' => 'logout',
+            TenantActivityLog::create([
+                'tenant_id'   => $tenantId,
+                'user_id'     => $userId,
+                'action'      => 'logout',
                 'description' => 'User logged out',
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
+                'ip_address'  => $request->ip(),
+                'user_agent'  => $request->userAgent(),
             ]);
         }
 
-        Auth::guard('web')->logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('tenantView.login');
     }
 }

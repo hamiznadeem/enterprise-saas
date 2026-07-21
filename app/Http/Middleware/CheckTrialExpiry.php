@@ -10,27 +10,52 @@ class CheckTrialExpiry
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // Agar user login hai
         if (auth()->check()) {
             $user = auth()->user();
 
-            // Agar user kisi Tenant (Clinic) se belong karta hai (Super Admin nahi hai)
             if ($user->tenant_id) {
                 $tenant = $user->tenant;
 
-                // Agar tenant ka trial khatam ho gaya hai
-                if ($tenant->trial_ends_at && $tenant->trial_ends_at->isPast()) {
-                    
-                    // Agar user 'billing' (payment) page par ja raha hai, toh usko jane do
-                    // Warna usko billing page par redirect kar do
-                    if (!$request->is('billing')) {
-                        return redirect()->route('billing')->with('error', 'Your 14-day trial has expired. Please upgrade to continue.');
+                // ── 1. Already expired ──
+                if ($tenant->status === 'expired') {
+                    if (!$request->routeIs('tenant.billing')) {
+                        return redirect()->route('tenant.billing')
+                            ->with('error', 'Your subscription has expired. Please renew to continue.');
                     }
+                }
+
+                // ── 2. Trial expired — auto mark ──
+                if ($tenant->status === 'trial' && $tenant->trial_ends_at && $tenant->trial_ends_at->isPast()) {
+                    $tenant->update(['status' => 'expired', 'on_trial' => false]);
+
+                    if (!$request->routeIs('tenant.billing')) {
+                        return redirect()->route('tenant.billing')
+                            ->with('error', 'Your 14-day trial has expired. Please upgrade to continue.');
+                    }
+                }
+
+                // ── 3. Active plan expired — auto mark ──
+                if ($tenant->status === 'active' && $tenant->will_expire_at && $tenant->will_expire_at->isPast()) {
+                    $tenant->update(['status' => 'expired']);
+
+                    if (!$request->routeIs('tenant.billing')) {
+                        return redirect()->route('tenant.billing')
+                            ->with('error', 'Your subscription has expired. Please renew to continue.');
+                    }
+                }
+
+                // ── 4. Suspended or inactive — force logout ──
+                if ($tenant->status === 'suspended' || !$tenant->is_active) {
+                    auth()->logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+
+                    return redirect()->route('tenantView.login')
+                        ->withErrors(['email' => 'Your account has been suspended. Contact support.']);
                 }
             }
         }
 
-        // Agar trial nahi khatam, toh user ko aage jaane do (Dashboard par)
         return $next($request);
     }
 }

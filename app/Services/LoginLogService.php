@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\LoginLog;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Jenssegers\Agent\Agent;
 
 class LoginLogService
 {

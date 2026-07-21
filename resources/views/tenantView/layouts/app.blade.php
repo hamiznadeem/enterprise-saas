@@ -89,7 +89,7 @@
                     <p class="text-xs {{ $topUrgent ? 'text-red-600' : 'text-amber-600' }}">Upgrade your plan to avoid losing access to your data.</p>
                 </div>
             </div>
-            <a href="{{ route('billing') }}" class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium rounded-lg border {{ $topUrgent ? 'border-red-300 text-red-700 hover:bg-red-50' : 'border-amber-300 text-amber-700 hover:bg-amber-50' }} transition shadow-sm">
+            <a href="{{ route('tenant.billing') }}" class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium rounded-lg border {{ $topUrgent ? 'border-red-300 text-red-700 hover:bg-red-50' : 'border-amber-300 text-amber-700 hover:bg-amber-50' }} transition shadow-sm">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
                 Upgrade Now
             </a>
@@ -155,11 +155,27 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            if(sidebar) sidebar.classList.toggle('-translate-x-full');
-            if(overlay) overlay.classList.toggle('hidden');
+            
+            // Check if desktop screen
+            if (window.innerWidth >= 1024) {
+                // Desktop: Toggle expanded class on body
+                document.body.classList.toggle('sidebar-expanded');
+                
+                // Save state to localStorage
+                if (document.body.classList.contains('sidebar-expanded')) {
+                    localStorage.setItem('sidebarState', 'expanded');
+                } else {
+                    localStorage.removeItem('sidebarState');
+                }
+            } else {
+                // Mobile: Slide in/out
+                if(sidebar) sidebar.classList.toggle('-translate-x-full');
+                if(overlay) overlay.classList.toggle('hidden');
+            }
         }
 
-        if (localStorage.getItem('sidebarState') === 'expanded') {
+        // Restore sidebar state on page load (Desktop only)
+        if (window.innerWidth >= 1024 && localStorage.getItem('sidebarState') === 'expanded') {
             document.body.classList.add('sidebar-expanded');
         }
     </script>

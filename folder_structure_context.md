@@ -20,6 +20,33 @@ c:\xampp\htdocs\enterprise-saas\
 │   ├───DTOs\
 │   ├───Http\
 │   │   ├───Controllers\
+│   │   │   ├───Auth\
+│   │   │   │   └───RegisteredUserController.php
+│   │   │   ├───Platform\
+│   │   │   │   ├───AuditLogController.php
+│   │   │   │   ├───AuthController.php
+│   │   │   │   ├───DashboardController.php
+│   │   │   │   ├───InvoiceController.php
+│   │   │   │   ├───PasswordController.php
+│   │   │   │   ├───PlanController.php
+│   │   │   │   ├───SessionController.php
+│   │   │   │   ├───SettingController.php
+│   │   │   │   ├───TenantController.php
+│   │   │   │   └───VerificationController.php
+│   │   │   ├───Tenant\
+│   │   │   │   └───AuthController.php
+│   │   │   ├───DashboardController.php
+│   │   │   ├───DoctorController.php
+│   │   │   ├───InvoiceController.php
+│   │   │   ├───LandingController.php
+│   │   │   ├───PatientController.php
+│   │   │   ├───PharmacyController.php
+│   │   │   ├───PosController.php
+│   │   │   ├───PrescriptionController.php
+│   │   │   ├───ProfileController.php
+│   │   │   ├───StaffController.php
+│   │   │   ├───TokenController.php
+│   │   │   └───TrialController.php
 │   │   ├───Middleware\
 │   │   └───Requests\
 │   ├───Models\
@@ -60,6 +87,7 @@ c:\xampp\htdocs\enterprise-saas\
 │   │   ├───PlatformPasswordService.php
 │   │   ├───PlatformSessionService.php
 │   │   └───StaffService.php
+│   │   └───TenantActivityService.php
 │   ├───Traits\
 │   │   └───BelongsToTenant.php
 │   └───View\
@@ -218,7 +246,7 @@ c:\xampp\htdocs\enterprise-saas\
 │       │   └───edit.blade.php
 │       ├───staff\
 │       │   └───index.blade.php
-│       ├───tenentViews\
+│       ├───tenantView\
 │       │   ├───auth\
 │       │   │   └───login.blade.php
 │       │   ├───layouts\
@@ -323,7 +351,7 @@ Route::post('/tenant/auth/login', [TenantAuthController::class, 'login'])->name(
 Route::post('/tenant/auth/logout', [TenantAuthController::class, 'logout'])->name('tenant.auth.logout');
 Route::get('/tenant/dashboard', function () {
     if (!session()->has('tenant_user_id')) {
-        return redirect()->route('tenant.login');
+        return redirect()->route('tenantView.login');
     }
     return view('tenant.dashboard');
 })->name('tenant.dashboard');

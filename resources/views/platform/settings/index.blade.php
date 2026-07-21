@@ -55,21 +55,21 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Time Zone</label>
                 <select name="timezone" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-white focus:ring-purple-500 focus:border-purple-500 outline-none">
                     <option value="">Select Timezone...</option>
-                    @foreach($timezones as $tz)
-                        <option value="{{ $tz }}" {{ $tz }} @if(($settings['timezone'] ?? 'UTC') === $tz) selected @endif></option>
+                    @foreach($timezones ?? [] as $tz)
+                        <option value="{{ $tz }}" {{ ($settings['timezone'] ?? 'UTC') === $tz ? 'selected' : '' }}>{{ $tz }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
     </div>
 
-    <!-- BRANDING TAB (Hidden) -->
+    <!-- BRANDING TAB -->
     <div id="panel-branding" class="hidden max-w-3xl">
         <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6">
             <h3 class="text-base font-bold text-gray-800 border-b border-gray-100 pb-3 mb-4">Logo & Favicon</h3>
             
             <div>
-                <label class="block text-sm font-80 text-gray-700 mb-2">Platform Logo</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Platform Logo</label>
                 <input type="file" name="logo" accept="image/png,image/jpeg,image/svg+xml" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:border file:border-gray-300 rounded-lg cursor-pointer">
                 @if(!empty($settings['logo']))
                     <p class="text-xs text-emerald-600 mt-1">Current: {{ $settings['logo'] }} (Leave blank to keep current)</p>
@@ -86,7 +86,7 @@
         </div>
     </div>
 
-    <!-- SMTP TAB (Hidden) -->
+    <!-- SMTP TAB -->
     <div id="panel-smtp" class="hidden max-w-3xl">
         <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
             <h3 class="text-base font-bold text-gray-800 border-b border-gray-100 pb-3 mb-4">SMTP Configuration (Email)</h3>
@@ -126,7 +126,7 @@
         </div>
     </div>
 
-    <!-- SMS TAB (Hidden) -->
+    <!-- SMS TAB -->
     <div id="panel-sms" class="hidden max-w-3xl">
         <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
             <h3 class="text-base font-bold text-gray-800 border-b border-gray-100 pb-3 mb-4">SMS Gateway</h3>
@@ -138,7 +138,7 @@
                     <select name="sms_provider" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-white focus:ring-purple-500 focus:border-purple-500 outline-none">
                         <option value="">Select Provider</option>
                         <option value="twilio" {{ ($settings['sms_provider'] ?? '') === 'twilio' ? 'selected' : '' }}>Twilio</option>
-                        <option value="sms broadcasts" {{ ($settings['sms_provider'] ?? '') === 'sms broadcasts' ? 'selected' : '' }}>SMS Broadcasts</option>
+                        <option value="sms_broadcasts" {{ ($settings['sms_provider'] ?? '') === 'sms_broadcasts' ? 'selected' : '' }}>SMS Broadcasts</option>
                     </select>
                 </div>
                 <div>
@@ -154,67 +154,72 @@
         </div>
     </div>
 
-    <!-- PASSWORD TAB (Hidden) -->
+    <!-- PASSWORD TAB -->
     <div id="panel-password" class="hidden max-w-3xl">
         <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
             <h3 class="text-base font-bold text-gray-800 border-b border-gray-100 pb-3 mb-4">Change Password</h3>
             <p class="text-xs text-gray-400 mb-6">Update your admin password. Must be different from your last 5 passwords.</p>
 
-            <div class="grid grid-cols-1 gap-4">
+            <!-- Message Box -->
+            <div id="pwMsgBox" class="hidden rounded-xl p-4 text-sm mb-4"></div>
+
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="fa-solid fa-lock text-gray-400 text-sm"></i>
                         </div>
-                        <input type="password" id="cp" placeholder="Enter current password" required
+                        <input type="password" id="cp" placeholder="Enter current password"
                             class="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 transition">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="fa-solid fa-key text-gray-400 text-sm"></i>
                         </div>
-                        <input type="password" id="np" placeholder="Min 8 characters" required minlength="8" oninput="checkStrengthLocal(this.value)"
+                        <input type="password" id="np" placeholder="Min 8 characters" minlength="8" oninput="checkStrengthLocal(this.value)"
                             class="w-full pl-11 pr-12 py-2.5 bg-white border border-gray-300 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 transition">
-                            <button type="button" onclick="togglePwLocal('np', this)" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition">
-                                <i class="fa-solid fa-eye text-sm pw-icon"></i>
-                            </button>
+                        <button type="button" onclick="togglePwLocal('np', this)" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition">
+                            <i class="fa-solid fa-eye text-sm pw-icon"></i>
+                        </button>
+                    </div>
+                    <div class="mt-2">
+                        <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div id="localStrengthFill" class="h-full rounded-full transition-all duration-300" style="width:0%;background:#ef4444;"></div>
                         </div>
-                        <div class="mt-2">
-                            <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                <div id="localStrengthFill" class="h-full rounded-full transition-all duration-300" style="width:0%;background:#ef4444;"></div>
-                            </div>
-                            <p id="localStrengthText" class="text-xs text-gray-400 mt-1.5 font-semibold"></p>
-                        </div>
+                        <p id="localStrengthText" class="text-xs text-gray-400 mt-1.5 font-semibold"></p>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="fa-solid fa-lock text-gray-400 text-sm"></i>
                         </div>
-                        <input type="password" id="cnp" placeholder="Re-enter new password" required minlength="8"
+                        <input type="password" id="cnp" placeholder="Re-enter new password" minlength="8"
                             class="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 transition">
-                        </div>
                     </div>
+                </div>
 
-                <!-- Submit -->
                 <button type="button" onclick="changePwLocal()" id="cpBtn" class="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg text-sm hover:shadow-lg hover:shadow-purple-600/30 transition-all hover:-translate-y-0.5">
                     <span id="cpBtnText">Update Password</span>
-                    <div id="cpSpinner" class="spinner" style="display:none;"></div>
+                    <svg id="cpSpinner" class="hidden animate-spin inline-block w-4 h-4 ml-2 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
                 </button>
             </div>
         </div>
+    </div>
 
-    <!-- SYSTEM TAB (Hidden) -->
+    <!-- SYSTEM TAB -->
     <div id="panel-system" class="hidden max-w-3xl">
         <div class="bg-white rounded-xl border border-red-200 p-6 space-y-5">
             <h3 class="text-base font-bold text-red-600 border-b border-red-100 pb-3 mb-4">Maintenance Mode</h3>
-            <p class="text-xs text-red-400 mb-6">⚠️ <strong>Warning:</strong> Enabling this will block all tenants from accessing the system and show them a maintenance message.</p>
+            <p class="text-xs text-red-400 mb-6">⚠️ <strong>Warning:</strong> Enabling this will block all tenants from accessing the system.</p>
             
             <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
                 <div>
@@ -223,7 +228,7 @@
                 </div>
                 <label class="relative inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'bg-red-500' : 'bg-gray-300' }}">
                     <input type="checkbox" name="maintenance_mode" value="1" {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'checked' : '' }} class="sr-only peer">
-                    <div class="w-5 h-5 transform rounded-full bg-white shadow transform -translate-x-0.5 {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'translate-x-5' : '' }} transition-transform duration-200"></div>
+                    <div class="w-5 h-5 transform rounded-full bg-white shadow {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'translate-x-5' : '-translate-x-0.5' }} transition-transform duration-200"></div>
                 </label>
             </div>
 
@@ -234,7 +239,7 @@
         </div>
     </div>
 
-    <!-- Save Button (Fixed at bottom) -->
+    <!-- Save Button -->
     <div class="mt-8 flex justify-end sticky bottom-0 bg-white border-t border-gray-200 pt-4 pb-20">
         <button type="submit" class="px-8 py-3 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition shadow-sm flex items-center gap-2">
             <i class="fa-solid fa-floppy-disk"></i> Save All Settings
@@ -243,14 +248,11 @@
 </form>
 
 <script>
+    // ── Tab Switching ──
     function switchTab(tabName) {
-        // Sab panels hide karo
         document.querySelectorAll('[id^="panel-"]').forEach(p => p.classList.add('hidden'));
-        
-        // Clicked tab ko dikhao
         document.getElementById('panel-' + tabName).classList.remove('hidden');
         
-        // Tabs ki active state change karo
         document.querySelectorAll('[id^="tab-"]').forEach(t => {
             t.classList.remove('border-purple-600', 'text-purple-600');
             t.classList.add('border-transparent', 'text-gray-500');
@@ -258,84 +260,115 @@
         document.getElementById('tab-' + tabName).classList.remove('border-transparent', 'text-gray-500');
         document.getElementById('tab-' + tabName).classList.add('border-purple-600', 'text-purple-600');
     }
-
-    // Page load par General tab active ho
     switchTab('general');
-</script>
 
-<script>
-        function checkStrength(pw) {
-            let s = 0;
-            if (pw.length >= 8) s++;
-            if (/[a-z]/.test(pw)) s++;
-            if (/[A-Z]/.test(pw)) s++;
-            if (/[0-9]/.test(pw)) s++;
-            if (/[^a-zA-Z0-9]/.test(pw)) s++;
-            const colors = ['#ef4444','#f97316','#eab308','#22c55e','#16a34a'];
-            const labels = ['Very Weak','Weak','Fair','Good','Strong'];
-            document.getElementById('strengthFill').style.width = (s * 20) + '%';
-            document.getElementById('strengthFill').style.background = colors[s];
-            document.getElementById('strengthText').textContent = labels[s];
-            document.getElementById('strengthText').style.color = colors[s];
+    // ── Password Strength ──
+    function checkStrengthLocal(pw) {
+        let s = 0;
+        if (pw.length >= 8) s++;
+        if (/[a-z]/.test(pw)) s++;
+        if (/[A-Z]/.test(pw)) s++;
+        if (/[0-9]/.test(pw)) s++;
+        if (/[^a-zA-Z0-9]/.test(pw)) s++;
+        const colors = ['#ef4444','#f97316','#eab308','#22c55e','#16a34a'];
+        const labels = ['Very Weak','Weak','Fair','Good','Strong'];
+        document.getElementById('localStrengthFill').style.width = (s * 20) + '%';
+        document.getElementById('localStrengthFill').style.background = colors[s];
+        document.getElementById('localStrengthText').textContent = labels[s];
+        document.getElementById('localStrengthText').style.color = colors[s];
+    }
+
+    // ── Toggle Password Visibility ──
+    function togglePwLocal(id, btn) {
+        const f = document.getElementById(id);
+        const i = btn.querySelector('.pw-icon');
+        if (f.type === 'password') {
+            f.type = 'text';
+            i.className = 'fa-solid fa-eye-slash pw-icon';
+        } else {
+            f.type = 'password';
+            i.className = 'fa-solid fa-eye pw-icon';
+        }
+    }
+
+    // ── Change Password (AJAX) ──
+    function changePwLocal() {
+        const box = document.getElementById('pwMsgBox');
+        const btn = document.getElementById('cpBtn');
+        const text = document.getElementById('cpBtnText');
+        const spinner = document.getElementById('cpSpinner');
+
+        const cp = document.getElementById('cp').value;
+        const np = document.getElementById('np').value;
+        const cnp = document.getElementById('cnp').value;
+
+        // Client-side validation
+        if (!cp || !np || !cnp) {
+            box.className = 'rounded-xl p-4 text-sm bg-red-50 text-red-700 border border-red-200';
+            box.textContent = 'All fields are required.';
+            box.classList.remove('hidden');
+            return;
         }
 
-        function togglePw(id, btn) {
-            const f = document.getElementById(id);
-            const i = btn.querySelector('.pw-icon');
-            if (f.type === 'password') { f.type = 'text'; i.className = 'fa-solid fa-eye-slash pw-icon'; }
-            else { f.type = 'password'; i.className = 'fa-solid fa-eye pw-icon'; }
+        if (np !== cnp) {
+            box.className = 'rounded-xl p-4 text-sm bg-red-50 text-red-700 border border-red-200';
+            box.textContent = 'New password and confirmation do not match.';
+            box.classList.remove('hidden');
+            return;
         }
 
-        document.getElementById('changeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const box = document.getElementById('msgBox');
-            const btn = document.getElementById('submitBtn');
-            const text = document.getElementById('btnText');
-            const spinner = document.getElementById('btnSpinner');
-            btn.disabled = true;
-            text.textContent = 'Updating...';
-            spinner.style.display = 'inline-block';
-            box.classList.add('hidden');
+        if (np.length < 8) {
+            box.className = 'rounded-xl p-4 text-sm bg-red-50 text-red-700 border border-red-200';
+            box.textContent = 'Password must be at least 8 characters.';
+            box.classList.remove('hidden');
+            return;
+        }
 
-            fetch('{{ route('platform.password.update.post') }}', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-XSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-                body: JSON.stringify({
-                    current_password: document.getElementById('current_password').value,
-                    password: document.getElementById('new_password').value,
-                    password_confirmation: document.getElementById('password_confirmation').value
-                })
+        // Disable button
+        btn.disabled = true;
+        text.textContent = 'Updating...';
+        spinner.classList.remove('hidden');
+        box.classList.add('hidden');
+
+        fetch('{{ route("platform.password.update.post") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                current_password: cp,
+                password: np,
+                password_confirmation: cnp
             })
-            .then(r => r.json())
-            .then(data => {
-                box.classList.remove('hidden');
-                if (data.success) {
-                    box.className = 'rounded-xl p-4 mb-6 text-sm bg-emerald-50 text-emerald-700 border border-emerald-200';
-                    box.textContent = data.message;
-                    document.getElementById('changeForm').reset();
-                    document.getElementById('strengthFill').style.width = '0%';
-                    document.getElementById('strengthText').textContent = '';
-                } else {
-                    box.className = 'rounded-xl p-4 mb-6 text-sm bg-red-50 text-red-700 border border-red-200';
-                    box.textContent = data.message;
-                    if (data.strength) {
-                        document.getElementById('strengthFill').style.width = (data.strength.score * 20) + '%';
-                        document.getElementById('strengthFill').style.background = data.strength.color;
-                        document.getElementById('strengthText').textContent = data.strength.label;
-                        document.getElementById('strengthText').style.color = data.strength.color;
-                    }
-                }
-            })
-            .catch(() => {
-                box.classList.remove('hidden');
-                box.className = 'rounded-xl p-4 mb-6 text-sm bg-red-50 text-red-700 border border-red-200';
-                box.textContent = 'Something went wrong.';
-            })
-            .finally(() => {
-                btn.disabled = false;
-                text.textContent = 'Update Password';
-                spinner.style.display = 'none';
-            });
+        })
+        .then(r => r.json())
+        .then(data => {
+            box.classList.remove('hidden');
+            if (data.success) {
+                box.className = 'rounded-xl p-4 text-sm bg-emerald-50 text-emerald-700 border border-emerald-200';
+                box.textContent = data.message;
+                document.getElementById('cp').value = '';
+                document.getElementById('np').value = '';
+                document.getElementById('cnp').value = '';
+                document.getElementById('localStrengthFill').style.width = '0%';
+                document.getElementById('localStrengthText').textContent = '';
+            } else {
+                box.className = 'rounded-xl p-4 text-sm bg-red-50 text-red-700 border border-red-200';
+                box.textContent = data.message;
+            }
+        })
+        .catch(() => {
+            box.classList.remove('hidden');
+            box.className = 'rounded-xl p-4 text-sm bg-red-50 text-red-700 border border-red-200';
+            box.textContent = 'Something went wrong. Please try again.';
+        })
+        .finally(() => {
+            btn.disabled = false;
+            text.textContent = 'Update Password';
+            spinner.classList.add('hidden');
         });
-    </script>
+    }
+</script>
 @endsection

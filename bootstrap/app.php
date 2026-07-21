@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'platform.auth' => \App\Http\Middleware\PlatformAuth::class,
             'security.headers' => \App\Http\Middleware\SecurityHeaders::class,
             'permission' => \App\Http\Middleware\CheckPlatformPermission::class,
+            'active.user' => \App\Http\Middleware\EnsureUserIsActive::class,
         ]);
     })
 

@@ -1,5 +1,6 @@
 # Database Schema
 
+
 This document provides a detailed overview of the database schema for the application.
 
 ## Tables
@@ -14,6 +15,7 @@ This document provides a detailed overview of the database schema for the applic
 | `email_verified_at` | `timestamp` | `nullable` |
 | `password` | `varchar(255)` | |
 | `remember_token` | `varchar(100)` | `nullable` |
+| `role` | `varchar(255)` | `default('user')` |
 | `created_at` | `timestamp` | `nullable` |
 | `updated_at` | `timestamp` | `nullable` |
 | `tenant_id` | `bigint` | `unsigned`, `nullable`, `foreign key` |
@@ -22,14 +24,6 @@ This document provides a detailed overview of the database schema for the applic
 | `is_active` | `tinyint(1)` | `default(1)` |
 | `login_attempts` | `smallint` | `unsigned`, `default(0)` |
 | `locked_until` | `timestamp` | `nullable` |
-
-### `password_reset_tokens`
-
-| Column | Type | Modifiers |
-| --- | --- | --- |
-| `email` | `varchar(255)` | `primary key` |
-| `token` | `varchar(255)` | |
-| `created_at` | `timestamp` | `nullable` |
 
 ### `sessions`
 
@@ -42,14 +36,6 @@ This document provides a detailed overview of the database schema for the applic
 | `payload` | `longtext` | |
 | `last_activity` | `int` | `index` |
 
-### `cache`
-
-| Column | Type | Modifiers |
-| --- | --- | --- |
-| `key` | `varchar(255)` | `primary key` |
-| `value` | `mediumtext` | |
-| `expiration` | `int` | `index` |
-
 ### `cache_locks`
 
 | Column | Type | Modifiers |
@@ -57,45 +43,6 @@ This document provides a detailed overview of the database schema for the applic
 | `key` | `varchar(255)` | `primary key` |
 | `owner` | `varchar(255)` | |
 | `expiration` | `int` | `index` |
-
-### `jobs`
-
-| Column | Type | Modifiers |
-| --- | --- | --- |
-| `id` | `bigint` | `unsigned`, `auto-increment`, `primary key` |
-| `queue` | `varchar(255)` | `index` |
-| `payload` | `longtext` | |
-| `attempts` | `tinyint` | `unsigned` |
-| `reserved_at` | `int` | `unsigned`, `nullable` |
-| `available_at` | `int` | `unsigned` |
-| `created_at` | `int` | `unsigned` |
-
-### `job_batches`
-
-| Column | Type | Modifiers |
-| --- | --- | --- |
-| `id` | `varchar(255)` | `primary key` |
-| `name` | `varchar(255)` | |
-| `total_jobs` | `int` | |
-| `pending_jobs` | `int` | |
-| `failed_jobs` | `int` | |
-| `failed_job_ids` | `longtext` | |
-| `options` | `mediumtext` | `nullable` |
-| `cancelled_at` | `int` | `nullable` |
-| `created_at` | `int` | |
-| `finished_at` | `int` | `nullable` |
-
-### `failed_jobs`
-
-| Column | Type | Modifiers |
-| --- | --- | --- |
-| `id` | `bigint` | `unsigned`, `auto-increment`, `primary key` |
-| `uuid` | `varchar(255)` | `unique` |
-| `connection` | `text` | |
-| `queue` | `text` | |
-| `payload` | `longtext` | |
-| `exception` | `longtext` | |
-| `failed_at` | `timestamp` | `default(current_timestamp)` |
 
 ### `tenants`
 
@@ -106,20 +53,21 @@ This document provides a detailed overview of the database schema for the applic
 | `domain` | `varchar(255)` | `unique` |
 | `database` | `varchar(255)` | `nullable`, `default(null)` |
 | `status` | `enum('trial', 'active', 'suspended', 'expired')` | `default('trial')` |
-| `trial_ends_at` | `timestamp` | `nullable` |
+| `trial_ends_at` | `datetime` | `nullable` |
 | `business_type` | `varchar(255)` | `default('clinic')` |
-| `outlets` | `varchar(255)` | `default(1)` |
+| `outlets` | `int` | `default(1)` |
 | `plan_id` | `bigint` | `unsigned`, `nullable` |
 | `is_active` | `tinyint(1)` | `default(1)` |
 | `will_expire_at` | `datetime` | `nullable` |
 | `owner_name` | `varchar(255)` | `nullable` |
 | `owner_email` | `varchar(255)` | `nullable` |
 | `enabled_modules` | `json` | `nullable` |
-| `deleted_at` | `timestamp` | `nullable` |
 | `phone` | `varchar(255)` | `nullable` |
 | `city` | `varchar(255)` | `nullable` |
 | `location` | `varchar(255)` | `nullable` |
 | `web_access_url` | `varchar(255)` | `nullable` |
+| `deleted_at` | `timestamp` | `nullable` |
+| `on_trial` | `tinyint(1)` | `default(1)` |
 
 ### `domains`
 
@@ -138,7 +86,7 @@ This document provides a detailed overview of the database schema for the applic
 | `id` | `bigint` | `unsigned`, `auto-increment`, `primary key` |
 | `tenant_id` | `bigint` | `unsigned`, `foreign key` |
 | `name` | `varchar(255)` | |
-| `phone` | `varchar(255)` | `unique` |
+| `phone` | `varchar(255)` | |
 | `cnic` | `varchar(255)` | `nullable` |
 | `age` | `varchar(255)` | |
 | `gender` | `enum('male', 'female', 'other')` | |
@@ -158,7 +106,7 @@ This document provides a detailed overview of the database schema for the applic
 | `tenant_id` | `bigint` | `unsigned`, `foreign key` |
 | `name` | `varchar(255)` | |
 | `specialization` | `varchar(255)` | `nullable` |
-| `consultation_fee` | `decimal(8, 2)` | `default(0)` |
+| `consultation_fee` | `decimal(10, 2)` | `default(0)` |
 | `phone` | `varchar(255)` | `nullable` |
 | `is_active` | `tinyint(1)` | `default(1)` |
 | `created_at` | `timestamp` | `nullable` |
@@ -173,7 +121,7 @@ This document provides a detailed overview of the database schema for the applic
 | `tenant_id` | `bigint` | `unsigned`, `foreign key` |
 | `name` | `varchar(255)` | |
 | `description` | `text` | `nullable` |
-| `fee` | `decimal(8, 2)` | `default(0)` |
+| `fee` | `decimal(10, 2)` | `default(0)` |
 | `is_active` | `tinyint(1)` | `default(1)` |
 | `created_at` | `timestamp` | `nullable` |
 | `updated_at` | `timestamp` | `nullable` |
@@ -203,10 +151,10 @@ This document provides a detailed overview of the database schema for the applic
 | `tenant_id` | `bigint` | `unsigned`, `foreign key` |
 | `patient_id` | `bigint` | `unsigned`, `foreign key` |
 | `token_id` | `bigint` | `unsigned`, `foreign key` |
-| `doctor_fee` | `decimal(8, 2)` | `default(0)` |
-| `service_fee` | `decimal(8, 2)` | `default(0)` |
-| `total_amount` | `decimal(8, 2)` | `default(0)` |
-| `discount` | `decimal(8, 2)` | `default(0)` |
+| `doctor_fee` | `decimal(10, 2)` | `default(0)` |
+| `service_fee` | `decimal(10, 2)` | `default(0)` |
+| `total_amount` | `decimal(10, 2)` | `default(0)` |
+| `discount` | `decimal(10, 2)` | `default(0)` |
 | `status` | `enum('paid', 'unpaid', 'partial')` | `default('unpaid')` |
 | `created_at` | `timestamp` | `nullable` |
 | `updated_at` | `timestamp` | `nullable` |
@@ -222,8 +170,8 @@ This document provides a detailed overview of the database schema for the applic
 | `generic_name` | `varchar(255)` | |
 | `category` | `varchar(255)` | `nullable` |
 | `stock_quantity` | `int` | `default(0)` |
-| `sale_price` | `decimal(8, 2)` | `default(0)` |
-| `purchase_price` | `decimal(8, 2)` | `default(0)` |
+| `sale_price` | `decimal(10, 2)` | `default(0)` |
+| `purchase_price` | `decimal(10, 2)` | `default(0)` |
 | `expiry_date` | `date` | `nullable` |
 | `batch_number` | `varchar(255)` | `nullable` |
 | `barcode` | `varchar(255)` | `nullable`, `index` |
@@ -268,12 +216,12 @@ This document provides a detailed overview of the database schema for the applic
 | `tenant_id` | `bigint` | `unsigned`, `foreign key` |
 | `patient_id` | `bigint` | `unsigned`, `nullable`, `foreign key` |
 | `user_id` | `bigint` | `unsigned`, `foreign key` |
-| `sale_number` | `varchar(255)` | `unique` |
-| `subtotal` | `decimal(12, 2)` | `default(0)` |
-| `tax_percentage` | `decimal(5, 2)` | `default(0)` |
-| `tax_amount` | `decimal(12, 2)` | `default(0)` |
-| `discount_amount` | `decimal(12, 2)` | `default(0)` |
-| `total_amount` | `decimal(12, 2)` | `default(0)` |
+| `sale_number` | `varchar(255)` | |
+| `subtotal` | `decimal(10, 2)` | `default(0)` |
+| `tax_percentage` | `decimal(10, 2)` | `default(0)` |
+| `tax_amount` | `decimal(10, 2)` | `default(0)` |
+| `discount_amount` | `decimal(10, 2)` | `default(0)` |
+| `total_amount` | `decimal(10, 2)` | `default(0)` |
 | `payment_method` | `varchar(255)` | `default('cash')` |
 | `status` | `varchar(255)` | `default('completed')` |
 | `created_at` | `timestamp` | `nullable` |
@@ -289,10 +237,10 @@ This document provides a detailed overview of the database schema for the applic
 | `itemable_type` | `varchar(255)` | |
 | `itemable_id` | `bigint` | `unsigned` |
 | `item_name` | `varchar(255)` | |
-| `unit_price` | `decimal(12, 2)` | |
+| `unit_price` | `decimal(10, 2)` | |
 | `unit_name` | `varchar(255)` | `default('Unit')` |
 | `quantity` | `int` | `default(1)` |
-| `total_price` | `decimal(12, 2)` | |
+| `total_price` | `decimal(10, 2)` | |
 | `created_at` | `timestamp` | `nullable` |
 | `updated_at` | `timestamp` | `nullable` |
 
@@ -321,7 +269,7 @@ This document provides a detailed overview of the database schema for the applic
 | `name` | `varchar(255)` | |
 | `slug` | `varchar(255)` | `unique` |
 | `description` | `text` | `nullable` |
-| `price` | `decimal(10, 2)` | `default(0)` |
+| `price` | `decimal(8, 2)` | `default(0)` |
 | `billing_cycle` | `varchar(255)` | `default('monthly')` |
 | `trial_days` | `int` | `default(0)` |
 | `limits` | `json` | `nullable` |
@@ -338,7 +286,7 @@ This document provides a detailed overview of the database schema for the applic
 | `tenant_id` | `bigint` | `unsigned`, `foreign key` |
 | `plan_id` | `bigint` | `unsigned`, `nullable`, `foreign key` |
 | `type` | `varchar(255)` | `default('trial')` |
-| `amount` | `decimal(10, 2)` | `default(0)` |
+| `amount` | `decimal(8, 2)` | `default(0)` |
 | `notes` | `text` | `nullable` |
 | `starts_at` | `datetime` | `nullable` |
 | `ends_at` | `datetime` | `nullable` |
@@ -353,9 +301,9 @@ This document provides a detailed overview of the database schema for the applic
 | `tenant_id` | `bigint` | `unsigned`, `foreign key` |
 | `subscription_id` | `bigint` | `unsigned`, `nullable`, `foreign key` |
 | `invoice_number` | `varchar(255)` | `unique` |
-| `amount` | `decimal(10, 2)` | |
-| `tax` | `decimal(10, 2)` | `default(0)` |
-| `total` | `decimal(10, 2)` | |
+| `amount` | `decimal(8, 2)` | |
+| `tax` | `decimal(8, 2)` | `default(0)` |
+| `total` | `decimal(8, 2)` | |
 | `status` | `varchar(255)` | `default('paid')` |
 | `due_date` | `datetime` | `nullable` |
 | `paid_at` | `datetime` | `nullable` |
@@ -372,10 +320,10 @@ This document provides a detailed overview of the database schema for the applic
 | `subject_type` | `varchar(255)` | `nullable` |
 | `subject_id` | `bigint` | `unsigned`, `nullable` |
 | `description` | `varchar(255)` | `nullable` |
+| `properties` | `json` | `nullable` |
 | `ip_address` | `varchar(255)` | `nullable` |
 | `created_at` | `timestamp` | `nullable` |
 | `updated_at` | `timestamp` | `nullable` |
-| `properties` | `json` | `nullable` |
 
 ### `platform_settings`
 
@@ -395,7 +343,7 @@ This document provides a detailed overview of the database schema for the applic
 | `id` | `bigint` | `unsigned`, `auto-increment`, `primary key` |
 | `tenant_id` | `bigint` | `unsigned`, `nullable`, `foreign key` |
 | `platform_invoice_id` | `bigint` | `unsigned`, `nullable`, `foreign key` |
-| `total` | `decimal(10, 2)` | `default(0)` |
+| `total` | `decimal(8, 2)` | `default(0)` |
 | `status` | `varchar(255)` | `default('completed')` |
 | `payment_method` | `varchar(255)` | `nullable` |
 | `created_at` | `timestamp` | `nullable` |
@@ -487,6 +435,61 @@ This document provides a detailed overview of the database schema for the applic
 | `platform_admin_id` | `bigint` | `unsigned`, `foreign key` |
 | `password` | `varchar(255)` | |
 | `created_at` | `timestamp` | `nullable` |
+
+### `password_reset_tokens`
+
+| Column | Type | Modifiers |
+| --- | --- | --- |
+| `email` | `varchar(255)` | `primary key` |
+| `token` | `varchar(255)` | |
+| `created_at` | `timestamp` | `nullable` |
+
+### `cache`
+
+| Column | Type | Modifiers |
+| --- | --- | --- |
+| `key` | `varchar(255)` | `primary key` |
+| `value` | `mediumtext` | |
+| `expiration` | `int` | `index` |
+
+### `jobs`
+
+| Column | Type | Modifiers |
+| --- | --- | --- |
+| `id` | `bigint` | `unsigned`, `auto-increment`, `primary key` |
+| `queue` | `varchar(255)` | `index` |
+| `payload` | `longtext` | |
+| `attempts` | `tinyint` | `unsigned` |
+| `reserved_at` | `int` | `unsigned`, `nullable` |
+| `available_at` | `int` | `unsigned` |
+| `created_at` | `int` | `unsigned` |
+
+### `job_batches`
+
+| Column | Type | Modifiers |
+| --- | --- | --- |
+| `id` | `varchar(255)` | `primary key` |
+| `name` | `varchar(255)` | |
+| `total_jobs` | `int` | |
+| `pending_jobs` | `int` | |
+| `failed_jobs` | `int` | |
+| `failed_job_ids` | `longtext` | |
+| `options` | `mediumtext` | `nullable` |
+| `cancelled_at` | `int` | `nullable` |
+| `created_at` | `int` | |
+| `finished_at` | `int` | `nullable` |
+
+### `failed_jobs`
+
+| Column | Type | Modifiers |
+| --- | --- | --- |
+| `id` | `bigint` | `unsigned`, `auto-increment`, `primary key` |
+| `uuid` | `varchar(255)` | `unique` |
+| `connection` | `text` | |
+| `queue` | `text` | |
+| `payload` | `longtext` | |
+| `exception` | `longtext` | |
+| `failed_at` | `timestamp` | `default(current_timestamp)` |
 
 ### `platform_password_resets`
 

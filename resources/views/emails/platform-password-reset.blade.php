@@ -8,9 +8,9 @@
     <div style="max-width: 480px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #065f46, #10b981); padding: 30px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 22px;">saasPOS</h1>
-            <p style="color: #a7f3d0; margin: 8px 0 0; font-size: 14px;">Password Reset Request</p>
+        <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 22px;">Platform Admin</h1>
+            <p style="color: #bfdbfe; margin: 8px 0 0; font-size: 14px;">Password Reset Request</p>
         </div>
 
         <!-- Body -->
@@ -19,12 +19,12 @@
                 Hello <strong>{{ $name }}</strong>,
             </p>
             <p style="color: #374151; font-size: 15px; line-height: 1.6; margin: 0 0 20px;">
-                We received a request to reset your saasPOS password. Click the button below to set a new password:
+                We received a request to reset your password. Click the button below to set a new password:
             </p>
 
             <div style="text-align: center; margin: 30px 0;">
                 <a href="{{ $resetUrl }}"
-                   style="display: inline-block; background: #059669; color: #ffffff; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 600;">
+                   style="display: inline-block; background: #2563eb; color: #ffffff; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 600;">
                     Reset Password
                 </a>
             </div>
