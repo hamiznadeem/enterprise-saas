@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SwiftPOS — All-in-One POS for Every Business</title>
+    <title> POS — All-in-One POS for Every Business</title>
     <meta name="description" content="Powerful POS system for marts, restaurants, cafes, retail stores & clinics. Inventory, billing, reports — everything in one place. Start free.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,7 +171,7 @@
                     <div class="w-9 h-9 bg-brand-500 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/25 group-hover:shadow-brand-500/40 transition-shadow">
                         <i class="fa-solid fa-bolt text-white text-sm"></i>
                     </div>
-                    <span class="font-extrabold text-gray-900 text-lg tracking-tight">SwiftPOS</span>
+                    <span class="font-extrabold text-gray-900 text-lg tracking-tight"> POS</span>
                 </a>
 
                 <div class="hidden lg:flex items-center gap-1">
@@ -599,7 +599,7 @@
                                         <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
                                         <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
                                     </div>
-                                    <h4 class="font-bold text-white text-xs">SwiftPOS — Billing</h4>
+                                    <h4 class="font-bold text-white text-xs"> POS — Billing</h4>
                                     <span class="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2.5 py-1 rounded-full">Terminal 1</span>
                                 </div>
 
@@ -936,7 +936,7 @@
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
                 Ready to switch to<br><span class="gradient-text">a smarter POS?</span>
             </h2>
-            <p class="mt-6 text-lg text-gray-400 max-w-xl mx-auto leading-relaxed">Join 500+ businesses already using SwiftPOS. Start your free 14-day trial — no credit card required.</p>
+            <p class="mt-6 text-lg text-gray-400 max-w-xl mx-auto leading-relaxed">Join 500+ businesses already using  POS. Start your free 14-day trial — no credit card required.</p>
             <div class="flex flex-col sm:flex-row gap-3.5 justify-center mt-10">
                 <a href="{{ route('trial.form') }}" class="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-brand-600 text-white text-sm font-bold rounded-2xl hover:bg-brand-700 transition-all shadow-2xl shadow-brand-600/30 hover:-translate-y-0.5 btn-shine">
                     Start Free 14-Day Trial
@@ -976,7 +976,7 @@
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-900 text-sm">Email</p>
-                                <p class="text-gray-500 text-sm mt-0.5">hello@swiftpos.com</p>
+                                <p class="text-gray-500 text-sm mt-0.5">hello@ pos.com</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
@@ -1042,7 +1042,7 @@
                         <div class="w-9 h-9 bg-brand-500 rounded-xl flex items-center justify-center">
                             <i class="fa-solid fa-bolt text-white text-sm"></i>
                         </div>
-                        <span class="font-extrabold text-white text-lg">SwiftPOS</span>
+                        <span class="font-extrabold text-white text-lg"> POS</span>
                     </a>
                     <p class="text-gray-500 text-sm leading-relaxed mb-6">All-in-one POS system built for every business. Fast, reliable, and easy to use.</p>
                     <div class="flex items-center gap-3">
@@ -1080,7 +1080,7 @@
                 </div>
             </div>
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8">
-                <p class="text-xs text-gray-600">© 2025 SwiftPOS. All rights reserved.</p>
+                <p class="text-xs text-gray-600">© 2025  POS. All rights reserved.</p>
                 <div class="flex items-center gap-6">
                     <a href="#" class="text-xs text-gray-600 hover:text-gray-400 transition">Terms</a>
                     <a href="#" class="text-xs text-gray-600 hover:text-gray-400 transition">Privacy</a>

@@ -20,6 +20,7 @@ class UserBranch extends Model
         'phone',
         'is_default',
         'is_active',
+        'branch_id',
     ];
 
     protected $casts = [
@@ -38,6 +39,11 @@ class UserBranch extends Model
     {
         return $this->belongsTo(Tenant::class);
     }
+
+    public function branch()
+{
+    return $this->belongsTo(Branch::class);
+}
 
     // ── Scopes ──
 
@@ -73,4 +79,15 @@ class UserBranch extends Model
         // Phir isko default bana do
         $this->update(['is_default' => true]);
     }
+
+
+// ── Override: Branch name with fallback ──
+
+public function getBranchNameAttribute(): string
+{
+    if ($this->branch_id && $this->relationLoaded('branch')) {
+        return $this->branch->name;
+    }
+    return $this->attributes['branch_name'] ?? 'Unknown';
+}
 }

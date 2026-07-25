@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Start Free Trial — SwiftPOS</title>
+    <title>Start Free Trial —  POS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -132,13 +132,13 @@
     <div class="top-bar">
         <a href="{{ route('landing') }}" class="logo">
             <div class="logo-icon"><i class="fa-solid fa-bolt" style="color:#fff;font-size:0.75rem;"></i></div>
-            <span class="logo-text">SwiftPOS</span>
+            <span class="logo-text"> POS</span>
         </a>
         </div>
 
     <!-- Hero -->
     <div class="hero">
-        <h1>Register your SwiftPOS today for <span>FREE</span></h1>
+        <h1>Register your  POS today for <span>FREE</span></h1>
         <p>Get started in 2 minutes. No credit card required.</p>
     </div>
 

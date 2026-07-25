@@ -200,10 +200,95 @@
                 </a>
             </div>
         </div>
+
+   <!-- ═══ SYSTEM ═══ -->
+        <div>
+            <p class="desktop-hide px-2 mb-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">System</p>
+            
+            <!-- DESKTOP: Flyout -->
+            <div class="nav-group mobile-hide">
+                <button class="tip w-full flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ $isGroupActive(['activity-logs', 'sessions', 'change-password']) ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}" data-tip="System">
+                    <i class="fa-solid fa-gear w-5 text-center shrink-0"></i>
+                </button>
+                <div class="flyout-menu">
+                    <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">System</p>
+                    <a href="{{ route('tenant.activity-logs') }}" class="flyout-link {{ $isActive('activity-logs') ? 'active' : '' }}"><i class="fa-solid fa-clock-rotate-left w-4 text-center"></i>Activity Logs</a>
+                    <a href="{{ route('tenant.sessions.index') }}" class="flyout-link {{ $isActive('sessions') ? 'active' : '' }}"><i class="fa-solid fa-desktop w-4 text-center"></i>Active Sessions</a>
+                    <a href="{{ route('password.change') }}" class="flyout-link {{ $isActive('change-password') ? 'active' : '' }}"><i class="fa-solid fa-key w-4 text-center"></i>Change Password</a>
+                    <a href="{{ route('two-factor.index') }}" class="flyout-link {{ $isActive('two-factor') ? 'active' : '' }}"><i class="fa-solid fa-shield-halved w-4 text-center"></i>Two-Factor Auth</a>
+                </div>
+            </div>
+
+            <!-- EXPANDED: Normal list -->
+            <div class="space-y-1 desktop-hide">
+                <a href="{{ route('tenant.activity-logs') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('activity-logs') ? '!bg-indigo-600 !text-white' : '' }}">
+                    <i class="fa-solid fa-clock-rotate-left w-5 text-center shrink-0"></i>Activity Logs
+                </a>
+                <a href="{{ route('tenant.sessions.index') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('sessions') ? '!bg-indigo-600 !text-white' : '' }}">
+                    <i class="fa-solid fa-desktop w-5 text-center shrink-0"></i>Active Sessions
+                </a>
+                <a href="{{ route('password.change') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('change-password') ? '!bg-indigo-600 !text-white' : '' }}">
+                    <i class="fa-solid fa-key w-5 text-center shrink-0"></i>Change Password
+                </a>
+                <a href="{{ route('two-factor.index') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('change-password') ? '!bg-indigo-600 !text-white' : '' }}">
+                    <i class="fa-solid fa-shield-halved w-5 text-center shrink-0"></i>Two-Factor Auth
+                </a>
+            </div>
+        </div>
     </nav>
 
     <!-- Bottom Area: Trial Info + Toggle Button -->
     <div class="px-2.5 py-3 border-t border-slate-800 shrink-0">
+
+                <!-- Branch Switcher -->
+        @php
+            $userBranches = auth()->user()->branches()->where('is_active', true)->get();
+            $currentBranchId = session('current_branch_id');
+            $currentBranch = $userBranches->firstWhere('id', $currentBranchId) ?? $userBranches->firstWhere('is_default', true) ?? $userBranches->first();
+        @endphp
+
+        @if($userBranches->count() > 1)
+        <div class="desktop-hide px-2 mb-2">
+            <form method="POST" action="{{ route('branch.switch') }}">
+                @csrf
+                <select name="branch_id" onchange="this.form.submit()"
+                    class="w-full px-2.5 py-2 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none cursor-pointer appearance-none"
+                    style="background-image: url('data:image/svg+xml;utf8,<svg fill=\"white\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" d=\"M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z\" clip-rule=\"evenodd\"/></svg>'); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1rem;">
+                    @foreach($userBranches as $branch)
+                    <option value="{{ $branch->id }}" {{ ($currentBranch && $branch->id === $currentBranch->id) ? 'selected' : '' }}>
+                        {{ $branch->branch_name ?? 'Branch ' . $branch->id }}
+                    </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
+
+        <!-- Slim mode: tooltip button -->
+        <div class="hidden desktop-hide lg:block mb-2">
+            <div class="nav-group">
+                <button class="tip w-full flex items-center justify-center px-2.5 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition" data-tip="{{ $currentBranch ? ($currentBranch->branch_name ?? 'Branch') : 'No Branch' }}">
+                    <i class="fa-solid fa-building w-5 text-center"></i>
+                </button>
+                <div class="flyout-menu" style="width: 220px;">
+                    <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Switch Branch</p>
+                    <form method="POST" action="{{ route('branch.switch') }}">
+                        @csrf
+                        @foreach($userBranches as $branch)
+                        <button type="submit" name="branch_id" value="{{ $branch->id }}"
+                            class="w-full text-left flyout-link {{ ($currentBranch && $branch->id === $currentBranch->id) ? 'active' : '' }}">
+                            <i class="fa-solid fa-building w-4 text-center"></i>
+                            {{ $branch->branch_name ?? 'Branch ' . $branch->id }}
+                            @if($currentBranch && $branch->id === $currentBranch->id)
+                                <i class="fa-solid fa-check ml-auto text-[10px]"></i>
+                            @endif
+                        </button>
+                        @endforeach
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
+
         @php 
             $tenant = app('currentTenant'); 
             $remainingDays = $tenant ? (int) now()->diffInDays($tenant->trial_ends_at) : 0;
@@ -218,6 +303,27 @@
                 </div>
             </div>
         @endif
+
+        @php
+    $pwdExpiry = \App\Services\PasswordExpiryService::shouldWarn(auth()->user()) ? \App\Services\PasswordExpiryService::getDaysRemaining(auth()->user()) : null;
+@endphp
+
+@if($pwdExpiry !== null)
+<div class="sticky top-16 z-20 mx-4 sm:mx-6 mt-4 p-3.5 rounded-xl border bg-amber-50 border-amber-200 flex items-center justify-between gap-4 shadow-sm">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-key text-amber-600"></i>
+        </div>
+        <div>
+            <p class="text-sm font-semibold text-amber-800">Password expires in {{ $pwdExpiry }} days</p>
+            <p class="text-xs text-amber-600">Update your password to avoid being locked out.</p>
+        </div>
+    </div>
+    <a href="{{ route('password.change') }}" class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50 transition shadow-sm">
+        Update Now
+    </a>
+</div>
+@endif
 
         <!-- TOGGLE BUTTON -->
         <button onclick="toggleSidebar()" class="hidden lg:flex w-full items-center justify-center gap-2 px-2.5 py-2 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-800 hover:text-white transition">

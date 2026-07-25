@@ -94,10 +94,37 @@ class AuthController extends Controller
             ]);
         }
 
-        // 6. Success
+       // Step 6: Success
         $user = Auth::user();
+
+        // Check email verification (NO sendEmailVerificationNotification here)
+        if (!$user->hasVerifiedEmail()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            return redirect()->route('tenant.verification.notice')
+                ->with('status', 'Please verify your email first. A new link has been sent.');
+        }
+
         AccountLockService::resetAttempts($user);
         LoginLogService::logSuccess($request, $user);
+        // Login success block mein — AccountLockService::resetAttempts ke baad
+        $ua = $request->userAgent();
+        $browser = 'Unknown';
+        $os = 'Unknown';
+
+        if (preg_match('/(Chrome|Firefox|Safari|Edge|Brave|Opera)\/[\d.]+/', $ua, $m)) {
+            $browser = $m[1];
+        }
+        if (preg_match('/(Windows|Mac|Linux|Android|iPhone|iPad)/', $ua, $m)) {
+            $os = $m[1];
+        }
+
+        $user->notify(new \App\Notifications\LoginNotification(
+            $request->ip(),
+            $browser,
+            $os,
+            now()->format('M d, Y h:i A')
+        ));
         $request->session()->regenerate();
 
         // Activity log — Direct create because tenant.identifier middleware
@@ -125,6 +152,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+
+        session()->forget('two_factor_verified');
+        session()->forget('2fa_otp_sent');
+        session()->forget('current_branch_id');
+
         // Capture user info BEFORE logout (auth() won't work after)
         $userId = auth()->id();
         $tenantId = auth()->user()?->tenant_id;
@@ -147,4 +179,37 @@ class AuthController extends Controller
 
         return redirect()->route('tenantView.login');
     }
+
+
+    /**
+     * List all active sessions for current user
+     */
+    public function sessions()
+    {
+        $userId = auth()->id();
+        $sessions = \App\Services\TenantSessionService::getActiveSessions($userId);
+        return view('tenantView.sessions.index', compact('sessions'));
+    }
+
+    /**
+     * Destroy a specific session (not current)
+     */
+    public function destroySession($id)
+    {
+        $killed = \App\Services\TenantSessionService::killSession($id);
+        if (!$killed) {
+            return back()->withErrors(['session' => 'Cannot terminate current session.']);
+        }
+        return back()->with('status', 'Session terminated.');
+    }
+
+    /**
+     * Kill all other sessions except current
+     */
+    public function killAllSessions()
+    {
+        $killed = \App\Services\TenantSessionService::killAllOtherSessions(auth()->id());
+        return back()->with('status', "{$killed} other session(s) terminated.");
+    }
+
 }

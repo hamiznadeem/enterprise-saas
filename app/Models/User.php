@@ -7,11 +7,18 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\BelongsToTenant;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Branch;
+use App\Models\UserBranch;
+use App\Models\LoginLog;
+use App\Models\UserPasswordHistory;
+use Illuminate\Support\Facades\Hash;
+
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, BelongsToTenant, HasRoles, HasApiTokens;
+    use HasFactory, Notifiable, BelongsToTenant, HasRoles, HasApiTokens, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -21,11 +28,18 @@ class User extends Authenticatable
         'role',
         'doctor_id',
         'is_active',
+        'username',
+        'last_login_at',
+        'two_factor_remember_token',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'two_factor_remember_token',
+
     ];
 
     protected $casts = [
@@ -33,7 +47,10 @@ class User extends Authenticatable
         'password' => 'hashed',
         'is_active' => 'boolean',
         'locked_until' => 'datetime',
+        'last_login_at' => 'datetime',
+        'username' => 'string',
     ];
+
     // ── Relationships ──
 
     public function tenant()
@@ -55,6 +72,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(LoginLog::class);
     }
+
+    public function branch()
+{
+    // Current active branch — session se set hota hai
+    return $this->belongsTo(Branch::class);
+}
+
+public function passwordHistory()
+{
+    return $this->hasMany(UserPasswordHistory::class)->orderByDesc('created_at');
+}
 
     // ── Branch Helpers ──
 
@@ -91,8 +119,7 @@ class User extends Authenticatable
         ], $data));
     }
 
-
-        // ── Account Lock Helpers ──
+    // ── Account Lock Helpers ──
 
     public function isLocked(): bool
     {
@@ -108,11 +135,65 @@ class User extends Authenticatable
     {
         return \App\Services\AccountLockService::getAttemptsRemaining($this);
     }
-        /**
-     * Override to use custom notification
+
+    // ── Notification Overrides ──
+
+    /**
+     * Override password reset to use tenant notification
      */
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \App\Notifications\TenantPasswordResetNotification($token));
     }
+
+    /**
+     * Override email verification to use tenant route name
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\TenantEmailVerification);
+    }
+
+
+
+    public function scopeForBranch($query, int $branchId)
+{
+    return $query->whereHas('branches', fn($q) => $q->where('branches.id', $branchId));
+}
+
+public function scopeActive($query)
+{
+    return $query->where('is_active', true);
+}
+
+public function getLoginIdentifierAttribute(): string
+{
+    return $this->username ?? $this->email;
+}
+
+public function getLastLoginDiffAttribute(): ?string
+{
+    if (!$this->last_login_at) return null;
+    return $this->last_login_at->diffForHumans();
+}
+
+
+
+
+// ── Password History Check ──
+
+public function isOldPassword(string $password): bool
+{
+    return $this->passwordHistory()
+        ->take(5) // Last 5 passwords check karo
+        ->get()
+        ->contains(fn($record) => Hash::check($password, $record->password));
+}
+
+// ── Login Tracking ──
+
+public function recordLogin(): void
+{
+    $this->update(['last_login_at' => now()]);
+}
 }

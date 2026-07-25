@@ -1601,12 +1601,23 @@ class User extends Authenticatable
     {
         return \App\Services\AccountLockService::getAttemptsRemaining($this);
     }
-        /**
-     * Override to use custom notification
+
+    // ── Notification Overrides ──
+
+    /**
+     * Override password reset to use tenant notification
      */
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \App\Notifications\TenantPasswordResetNotification($token));
+    }
+
+    /**
+     * Override email verification to use tenant route name
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\TenantEmailVerification);
     }
 }
 ```
@@ -4436,6 +4447,251 @@ class AuthController extends Controller
 }
 ```
 
+### `app/Http/Controllers/Tenant/BranchController.php`
+
+```php
+<?php
+
+namespace App\Http\Controllers\Tenant;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class BranchController extends Controller
+{
+    /**
+     * Switch active branch
+     */
+    public function switchBranch(Request $request)
+    {
+        $request->validate([
+            'branch_id' => 'required|integer|exists:user_branches,id',
+        ]);
+
+        $user = Auth::user();
+
+        if (!$user->hasBranchAccess($request->branch_id)) {
+            return back()->withErrors(['error' => 'You do not have access to this branch.']);
+        }
+
+        session(['current_branch_id' => $request->branch_id]);
+
+        $branchName = $user->branches()->where('id', $request->branch_id)->value('branch_name') ?? 'Branch';
+
+        return back()->with('status', "Switched to {$branchName}.");
+    }
+
+    /**
+     * Get branches for AJAX dropdown
+     */
+    public function getBranches()
+    {
+        $user = Auth::user();
+        $branches = $user->branches()->where('is_active', true)->get(['id', 'branch_name', 'is_default']);
+        $currentId = session('current_branch_id');
+
+        return response()->json([
+            'branches' => $branches,
+            'current_id' => $currentId,
+        ]);
+    }
+}
+```
+
+### `app/Http/Controllers/Tenant/TwoFactorController.php`
+
+```php
+<?php
+
+namespace App\Http\Controllers\Tenant;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\TwoFactorService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class TwoFactorController extends Controller
+{
+    // ── Settings Page ──
+
+    public function index()
+    {
+        $user = Auth::user();
+        $recoveryCodes = $user->two_factor_enabled ? TwoFactorService::getRecoveryCodes($user) : [];
+        $showCodes = session('show_recovery_codes', false);
+
+        return view('tenantView.two-factor.index', compact('user', 'recoveryCodes', 'showCodes'));
+    }
+
+    // ── Enable Email 2FA ──
+
+    public function enableEmail(Request $request)
+    {
+        $user = Auth::user();
+        $codes = TwoFactorService::enableEmail2FA($user);
+
+        return redirect()->route('two-factor.index')
+            ->with('show_recovery_codes', true)
+            ->with('recovery_codes', $codes)
+            ->with('status', 'Email 2FA enabled!');
+    }
+
+    // ── Setup TOTP (Show QR) ──
+
+    public function setupTOTP()
+    {
+        $user = Auth::user();
+        $secret = TwoFactorService::generateSecret();
+        $qrUrl = TwoFactorService::getQRCodeUrl($user->email, $secret);
+
+        session(['totp_setup_secret' => $secret]);
+
+        return view('tenantView.two-factor.setup-totp', compact('secret', 'qrUrl'));
+    }
+
+    // ── Confirm & Enable TOTP ──
+
+    public function enableTOTP(Request $request)
+    {
+        $request->validate(['code' => 'required|string|size:6']);
+
+        $secret = session('totp_setup_secret');
+        if (!$secret) {
+            return redirect()->route('two-factor.index')->withErrors(['error' => 'Setup expired. Try again.']);
+        }
+
+        if (!TwoFactorService::verifyTOTP($secret, $request->code)) {
+            return back()->withErrors(['code' => 'Invalid code. Try again.']);
+        }
+
+        $user = Auth::user();
+        $codes = TwoFactorService::enableTOTP2FA($user, $secret);
+        session()->forget('totp_setup_secret');
+
+        return redirect()->route('two-factor.index')
+            ->with('show_recovery_codes', true)
+            ->with('recovery_codes', $codes)
+            ->with('status', 'Authenticator 2FA enabled!');
+    }
+
+    // ── Disable 2FA ──
+
+    public function disable(Request $request)
+    {
+        $request->validate(['password' => 'required|string']);
+
+        if (!\Hash::check($request->password, Auth::user()->password)) {
+            return back()->withErrors(['password' => 'Incorrect password.']);
+        }
+
+        TwoFactorService::disable2FA(Auth::user());
+        session()->forget('two_factor_verified');
+
+        return redirect()->route('two-factor.index')->with('status', '2FA disabled.');
+    }
+
+    // ── Regenerate Recovery Codes ──
+
+    public function regenerateCodes(Request $request)
+    {
+        $request->validate(['password' => 'required|string']);
+
+        if (!\Hash::check($request->password, Auth::user()->password)) {
+            return back()->withErrors(['password' => 'Incorrect password.']);
+        }
+
+        $codes = TwoFactorService::generateRecoveryCodes();
+        TwoFactorService::storeRecoveryCodes(Auth::user(), $codes);
+
+        return redirect()->route('two-factor.index')
+            ->with('show_recovery_codes', true)
+            ->with('recovery_codes', $codes)
+            ->with('status', 'New recovery codes generated.');
+    }
+
+    // ── Challenge Page (After Login) ──
+
+    public function showChallenge()
+    {
+        $user = Auth::user();
+
+        if (!$user->two_factor_enabled) {
+            return redirect()->route('tenant.dashboard');
+        }
+
+        if (session('two_factor_verified')) {
+            return redirect()->route('tenant.dashboard');
+        }
+
+        // Auto-send email OTP if method is email
+        if ($user->two_factor_method === 'email' && !session('2fa_otp_sent')) {
+            $code = TwoFactorService::generateEmailOTP($user->id);
+            $user->notify(new \App\Notifications\TwoFactorOTPNotification($code));
+            session(['2fa_otp_sent' => true]);
+        }
+
+        return view('tenantView.two-factor.challenge', compact('user'));
+    }
+
+    // ── Verify Challenge ──
+
+    public function verifyChallenge(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+            'is_recovery' => 'sometimes|boolean',
+        ]);
+
+        $user = Auth::user();
+
+        if ($request->boolean('is_recovery')) {
+            $valid = TwoFactorService::verifyRecoveryCode($user, $request->code);
+            $errorField = 'recovery_code';
+        } else {
+            if ($user->two_factor_method === 'email') {
+                $valid = TwoFactorService::verifyEmailOTP($user->id, $request->code);
+            } else {
+                $secret = TwoFactorService::getDecryptedSecret($user);
+                $valid = TwoFactorService::verifyTOTP($secret, $request->code);
+            }
+            $errorField = 'code';
+        }
+
+        if (!$valid) {
+            $errorMsg = $request->boolean('is_recovery') ? 'Invalid recovery code.' : 'Invalid code.';
+            $attempts = (int) cache()->get("2fa:attempts:{$user->id}", 0);
+            if ($attempts >= 4) {
+                $errorMsg .= ' Too many attempts. Request a new code.';
+            }
+            return back()->withErrors([$errorField => $errorMsg])->withInput();
+        }
+
+        session(['two_factor_verified' => true]);
+        session()->forget('2fa_otp_sent');
+
+        return redirect()->route('tenant.dashboard');
+    }
+
+    // ── Resend Email OTP ──
+
+    public function resendOTP()
+    {
+        $user = Auth::user();
+
+        if ($user->two_factor_method !== 'email') {
+            return back();
+        }
+
+        $code = TwoFactorService::generateEmailOTP($user->id);
+        $user->notify(new \App\Notifications\TwoFactorOTPNotification($code));
+
+        return back()->with('status', 'New code sent!');
+    }
+}
+```
+
 ### `app/Http/Controllers/TokenController.php`
 
 ```php
@@ -4962,6 +5218,166 @@ class TrustProxies extends Middleware
         Request::HEADER_X_FORWARDED_AWS,
         Request::HEADER_X_FORWARDED_PROTO,
     ];
+}
+```
+
+### `app/Http/Middleware/EnsureUserIsActive.php`
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureUserIsActive
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (auth()->check() && !auth()->user()->is_active) {
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('tenantView.login')
+                ->withErrors(['email' => 'Your account has been deactivated.']);
+        }
+
+        return $next($request);
+    }
+}
+```
+
+### `app/Http/Middleware/CheckBranch.php`
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class CheckBranch
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return $next($request);
+        }
+
+        // If user has no branches assigned, skip
+        $branches = $user->branches()->where('is_active', true)->get();
+        if ($branches->isEmpty()) {
+            return $next($request);
+        }
+
+        // Get current branch from session
+        $currentBranchId = session('current_branch_id');
+
+        // If no branch selected, set default
+        if (!$currentBranchId) {
+            $default = $user->getDefaultBranch();
+            if ($default) {
+                session(['current_branch_id' => $default->id]);
+            } else {
+                session(['current_branch_id' => $branches->first()->id]);
+            }
+        }
+
+        // Validate that selected branch belongs to user
+        $currentBranchId = session('current_branch_id');
+        if ($currentBranchId && !$user->hasBranchAccess($currentBranchId)) {
+            session()->forget('current_branch_id');
+            $default = $user->getDefaultBranch();
+            session(['current_branch_id' => $default ? $default->id : $branches->first()->id]);
+        }
+
+        // Store in app container for easy access
+        $currentBranch = $user->branches()->where('id', session('current_branch_id'))->first();
+        app()->instance('currentBranch', $currentBranch);
+
+        return $next($request);
+    }
+}
+```
+
+### `app/Http/Middleware/CheckPasswordExpiry.php`
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use App\Services\PasswordExpiryService;
+use Symfony\Component\HttpFoundation\Response;
+
+class CheckPasswordExpiry
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (auth()->check() && PasswordExpiryService::isExpired(auth()->user())) {
+            return redirect()->route('password.change')
+                ->with('error', 'Your password has expired. Please set a new password.');
+        }
+
+        return $next($request);
+    }
+}
+```
+
+### `app/Http/Middleware/EnsureEmailVerified.php`
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureEmailVerified
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (auth()->check() && !auth()->user()->hasVerifiedEmail()) {
+            return redirect()->route('tenant.verification.notice');
+        }
+
+        return $next($request);
+    }
+}
+```
+
+### `app/Http/Middleware/EnsureTwoFactorVerified.php`
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureTwoFactorVerified
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (auth()->check() && auth()->user()->two_factor_enabled && !session('two_factor_verified')) {
+            return redirect()->route('two-factor.challenge');
+        }
+
+        return $next($request);
+    }
 }
 ```
 
@@ -5849,6 +6265,438 @@ class TenantActivityService
 }
 ```
 
+### `app/Services/PasswordExpiryService.php`
+
+```php
+<?php
+
+namespace App\Services;
+
+use App\Models\User;
+use Carbon\Carbon;
+
+class PasswordExpiryService
+{
+    const DAYS = 90; // Password expires after 90 days
+
+    public static function isExpired(User $user): bool
+    {
+        if (!$user->password_changed_at) {
+            // Never changed — expire from created_at
+            return $user->created_at->diffInDays(now()) >= self::DAYS;
+        }
+        return $user->password_changed_at->diffInDays(now()) >= self::DAYS;
+    }
+
+    public static function getDaysRemaining(User $user): int
+    {
+        if (!$user->password_changed_at) {
+            return max(0, self::DAYS - $user->created_at->diffInDays(now()));
+        }
+        return max(0, self::DAYS - $user->password_changed_at->diffInDays(now()));
+    }
+
+    public static function getWarningThreshold(): int
+    {
+        return 14; // Warn 14 days before expiry
+    }
+
+    public static function shouldWarn(User $user): bool
+    {
+        $remaining = self::getDaysRemaining($user);
+        return $remaining > 0 && $remaining <= self::getWarningThreshold();
+    }
+
+    public static function markAsChanged(User $user): void
+    {
+        $user->password_changed_at = now();
+        $user->save();
+    }
+}
+```
+
+### `app/Services/TenantSessionService.php`
+
+```php
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
+class TenantSessionService
+{
+    /**
+     * Get all active sessions for a tenant user
+     */
+    public static function getActiveSessions(int $userId): array
+    {
+        $sessions = DB::table('sessions')
+            ->where('last_activity', '>=', now()->subDays(7)->timestamp)
+            ->get();
+
+        $result = [];
+        $currentSessionId = Session::getId();
+
+        foreach ($sessions as $session) {
+            $payload = @unserialize(@base64_decode($session->payload));
+
+            if (!$payload || !isset($payload['login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d'])) {
+                continue;
+            }
+
+            $userIdFromSession = $payload['login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d'];
+
+            if ($userIdFromSession != $userId) {
+                continue;
+            }
+
+            $ua = $payload['user_agent'] ?? '';
+            $device = self::parseDevice($ua);
+
+            $result[] = [
+                'id'            => $session->id,
+                'ip'            => $session->ip_address,
+                'device_type'   => $device['type'],
+                'device_icon'   => $device['icon'],
+                'browser'       => $device['browser'],
+                'browser_ver'   => $device['version'],
+                'os'            => $device['os'],
+                'last_activity' => self::timeAgo($session->last_activity),
+                'is_current'    => $session->id === $currentSessionId,
+            ];
+        }
+
+        // Sort: current first, then by last_activity desc
+        usort($result, function ($a, $b) {
+            if ($a['is_current']) return -1;
+            if ($b['is_current']) return 1;
+            return 0;
+        });
+
+        return $result;
+    }
+
+    /**
+     * Kill a specific session (not current)
+     */
+    public static function killSession(string $sessionId): bool
+    {
+        if ($sessionId === Session::getId()) {
+            return false;
+        }
+        return DB::table('sessions')->where('id', $sessionId)->delete() > 0;
+    }
+
+    /**
+     * Kill all other sessions except current
+     */
+    public static function killAllOtherSessions(int $userId): int
+    {
+        $sessions = DB::table('sessions')->get();
+        $currentId = Session::getId();
+        $killed = 0;
+
+        foreach ($sessions as $session) {
+            if ($session->id === $currentId) continue;
+
+            $payload = @unserialize(@base64_decode($session->payload));
+
+            if ($payload && isset($payload['login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d'])) {
+                if ($payload['login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d'] == $userId) {
+                    DB::table('sessions')->where('id', $session->id)->delete();
+                    $killed++;
+                }
+            }
+        }
+
+        return $killed;
+    }
+
+    /**
+     * Parse user agent string
+     */
+    private static function parseDevice(string $ua): array
+    {
+        $result = [
+            'type'    => 'desktop',
+            'icon'    => 'fa-desktop',
+            'browser' => 'Unknown',
+            'version' => '',
+            'os'      => 'Unknown',
+        ];
+
+        // Device type
+        if (preg_match('/Mobile|Android.*Mobile|iPhone|iPod/i', $ua)) {
+            $result['type'] = 'mobile';
+            $result['icon'] = 'fa-mobile-screen';
+        } elseif (preg_match('/iPad|Android(?!.*Mobile)|Tablet/i', $ua)) {
+            $result['type'] = 'tablet';
+            $result['icon'] = 'fa-tablet-screen-button';
+        }
+
+        // Browser
+        $browsers = [
+            ['name' => 'Edge',    'pattern' => '/Edg(?:e|A|iOS)?\/(\d+[\.\d]*)/'],
+            ['name' => 'Opera',   'pattern' => '/OPR\/(\d+[\.\d]*)/'],
+            ['name' => 'Firefox', 'pattern' => '/Firefox\/(\d+[\.\d]*)/'],
+            ['name' => 'Chrome',  'pattern' => '/Chrome\/(\d+[\.\d]*)/'],
+            ['name' => 'Safari',  'pattern' => '/Version\/(\d+[\.\d]*).*Safari/'],
+            ['name' => 'Brave',   'pattern' => '/Brave\/(\d+[\.\d]*)/'],
+        ];
+
+        foreach ($browsers as $b) {
+            if (preg_match($b['pattern'], $ua, $m)) {
+                $result['browser'] = $b['name'];
+                $result['version'] = $m[1] ?? '';
+                break;
+            }
+        }
+
+        // OS
+        $oss = [
+            ['name' => 'Windows', 'pattern' => '/Windows NT (\d+[\.\d]*)/'],
+            ['name' => 'macOS',   'pattern' => '/Mac OS X (\d+[._\d]*)/'],
+            ['name' => 'Linux',   'pattern' => '/Linux/i'],
+            ['name' => 'Android', 'pattern' => '/Android (\d+[\.\d]*)/'],
+            ['name' => 'iOS',     'pattern' => '/iPhone OS (\d+[_\d]*)/'],
+        ];
+
+        foreach ($oss as $o) {
+            if (preg_match($o['pattern'], $ua, $m)) {
+                $result['os'] = $o['name'];
+                break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Human-readable time ago
+     */
+    private static function timeAgo(int $timestamp): string
+    {
+        $diff = now()->timestamp - $timestamp;
+
+        if ($diff < 60) return 'Just now';
+        if ($diff < 3600) return floor($diff / 60) . ' min ago';
+        if ($diff < 86400) return floor($diff / 3600) . ' hr ago';
+        if ($diff < 604800) return floor($diff / 86400) . ' days ago';
+        return date('M j, Y', $timestamp);
+    }
+}
+```
+
+### `app/Services/TwoFactorService.php`
+
+```php
+<?php
+
+namespace App\Services;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
+
+class TwoFactorService
+{
+    private static function base32Encode(string $data): string
+    {
+        $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        $bits = '';
+        foreach (str_split($data) as $char) {
+            $bits .= str_pad(decbin(ord($char)), 8, '0', STR_PAD_LEFT);
+        }
+        $base32 = '';
+        for ($i = 0; $i + 5 <= strlen($bits); $i += 5) {
+            $base32 .= $alphabet[bindec(substr($bits, $i, 5))];
+        }
+        while (strlen($base32) % 8 !== 0) {
+            $base32 .= '=';
+        }
+        return $base32;
+    }
+
+    private static function base32Decode(string $data): string
+    {
+        $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        $data = rtrim($data, '=');
+        $bits = '';
+        foreach (str_split($data) as $char) {
+            $pos = strpos($alphabet, $char);
+            if ($pos === false) continue;
+            $bits .= str_pad(decbin($pos), 5, '0', STR_PAD_LEFT);
+        }
+        $binary = '';
+        for ($i = 0; $i + 8 <= strlen($bits); $i += 8) {
+            $binary .= chr(bindec(substr($bits, $i, 8)));
+        }
+        return $binary;
+    }
+
+    // ── Secret Generation (TOTP) ──
+
+    public static function generateSecret(): string
+    {
+        return self::base32Encode(random_bytes(20));
+    }
+
+    public static function getQRCodeUrl(string $email, string $secret): string
+    {
+        $params = http_build_query([
+            'secret' => $secret,
+            'issuer' => 'ClinicPOS',
+            'algorithm' => 'SHA1',
+            'digits' => 6,
+            'period' => 30,
+        ]);
+        return 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl='
+            . urlencode("otpauth://totp/ClinicPOS:{$email}?{$params}");
+    }
+
+    public static function getCurrentTOTPCode(string $secret): string
+    {
+        return self::calculateTOTP($secret, time());
+    }
+
+    public static function verifyTOTP(string $secret, string $code): bool
+    {
+        $code = str_pad($code, 6, '0', STR_PAD_LEFT);
+        // Check current, previous, and next time step (90 second window)
+        for ($i = -1; $i <= 1; $i++) {
+            if (self::calculateTOTP($secret, time() + ($i * 30)) === $code) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static function calculateTOTP(string $secret, int $timestamp): string
+    {
+        $timeSlice = floor($timestamp / 30);
+        $time = pack('N', $timeSlice);
+        $key = self::base32Decode($secret);
+        $hash = hash_hmac('sha1', $time, $key, true);
+        $offset = ord($hash[19]) & 0xf;
+        $code = (
+            ((ord($hash[$offset + 0]) & 0x7f) << 24) |
+            ((ord($hash[$offset + 1]) & 0xff) << 16) |
+            ((ord($hash[$offset + 2]) & 0xff) << 8) |
+            (ord($hash[$offset + 3]) & 0xff)
+        ) % 1000000;
+        return str_pad((string) $code, 6, '0', STR_PAD_LEFT);
+    }
+
+    // ── Email OTP ──
+
+    public static function generateEmailOTP(int $userId): string
+    {
+        $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        Cache::put("2fa:otp:{$userId}", $code, now()->addMinutes(5));
+        Cache::put("2fa:attempts:{$userId}", 0, now()->addMinutes(5));
+        return $code;
+    }
+
+    public static function verifyEmailOTP(int $userId, string $code): bool
+    {
+        $cached = Cache::get("2fa:otp:{$userId}");
+        $attempts = (int) Cache::get("2fa:attempts:{$userId}", 0);
+
+        if ($attempts >= 5) {
+            Cache::forget("2fa:otp:{$userId}");
+            return false;
+        }
+
+        Cache::increment("2fa:attempts:{$userId}");
+
+        if ($cached && $cached === $code) {
+            Cache::forget("2fa:otp:{$userId}");
+            Cache::forget("2fa:attempts:{$userId}");
+            return true;
+        }
+
+        return false;
+    }
+
+    // ── Recovery Codes ──
+
+    public static function generateRecoveryCodes(): array
+    {
+        $codes = [];
+        for ($i = 0; $i < 10; $i++) {
+            $codes[] = strtoupper(substr(md5(random_bytes(16)), 0, 8));
+        }
+        return $codes;
+    }
+
+    public static function storeRecoveryCodes(User $user, array $codes): void
+    {
+        $user->two_factor_recovery_codes = Crypt::encryptString(json_encode($codes));
+        $user->save();
+    }
+
+    public static function getRecoveryCodes(User $user): array
+    {
+        if (!$user->two_factor_recovery_codes) return [];
+        return json_decode(Crypt::decryptString($user->two_factor_recovery_codes), true) ?: [];
+    }
+
+    public static function verifyRecoveryCode(User $user, string $code): bool
+    {
+        $code = strtoupper(trim($code));
+        $codes = self::getRecoveryCodes($user);
+
+        $key = array_search($code, $codes);
+        if ($key !== false) {
+            array_splice($codes, $key, 1);
+            self::storeRecoveryCodes($user, $codes);
+            return true;
+        }
+
+        return false;
+    }
+
+    // ── Enable / Disable ──
+
+    public static function enableEmail2FA(User $user): array
+    {
+        $codes = self::generateRecoveryCodes();
+        $user->two_factor_enabled = true;
+        $user->two_factor_method = 'email';
+        $user->two_factor_secret = null;
+        self::storeRecoveryCodes($user, $codes);
+        return $codes;
+    }
+
+    public static function enableTOTP2FA(User $user, string $secret): array
+    {
+        $codes = self::generateRecoveryCodes();
+        $user->two_factor_enabled = true;
+        $user->two_factor_method = 'totp';
+        $user->two_factor_secret = Crypt::encryptString($secret);
+        self::storeRecoveryCodes($user, $codes);
+        return $codes;
+    }
+
+    public static function disable2FA(User $user): void
+    {
+        $user->two_factor_enabled = false;
+        $user->two_factor_method = null;
+        $user->two_factor_secret = null;
+        $user->two_factor_recovery_codes = null;
+        $user->save();
+    }
+
+    public static function getDecryptedSecret(User $user): ?string
+    {
+        if (!$user->two_factor_secret) return null;
+        return Crypt::decryptString($user->two_factor_secret);
+    }
+}
+```
+
 ## Repositories
 
 
@@ -6006,6 +6854,50 @@ trait BelongsToTenant
 ## Notifications
 
 
+### `app/Notifications/TenantCreatedNotification.php`
+
+```php
+<?php
+
+namespace App\Notifications;
+
+use App\Models\Tenant;
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
+
+class TenantCreatedNotification extends Notification
+{
+    use Queueable;
+
+    public function __construct(
+        public Tenant $tenant,
+        public array $credentials
+    ) {}
+
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
+
+    public function toMail($notifiable)
+    {
+        $loginUrl = 'https://' . $this->tenant->web_access_url . '/login';
+
+        return (new MailMessage)
+            ->subject('Your saasPOS Account is Ready!')
+            ->view('emails.tenant-created', [
+                'name'        => $this->credentials['email'],
+                'tenantName'  => $this->tenant->name,
+                'domain'      => $this->tenant->web_access_url,
+                'email'       => $this->credentials['email'],
+                'password'    => $this->credentials['password'],
+                'loginUrl'    => $loginUrl,
+            ]);
+    }
+}
+```
+
 ### `app/Notifications/TenantPasswordResetNotification.php`
 
 ```php
@@ -6035,6 +6927,129 @@ class TenantPasswordResetNotification extends ResetPasswordNotification implemen
                 'name' => $notifiable->name,
                 'resetUrl' => $resetUrl,
             ]);
+    }
+}
+```
+
+### `app/Notifications/LoginNotification.php`
+
+```php
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
+
+class LoginNotification extends Notification
+{
+    use Queueable;
+
+    public function __construct(
+        public string $ip,
+        public string $browser,
+        public string $os,
+        public string $time
+    ) {}
+
+    public function via($notifiable): array
+    {
+        return ['mail'];
+    }
+
+    public function toMail($notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('New Login Detected — POS')
+            ->greeting('Hello ' . $notifiable->name . ',')
+            ->line('A new login was detected on your account.')
+            ->line('**Time:** ' . $this->time)
+            ->line('**IP Address:** ' . $this->ip)
+            ->line('**Browser:** ' . $this->browser)
+            ->line('**OS:** ' . $this->os)
+            ->line('If this was you, no action is needed.')
+            ->line('If you did not log in, please change your password immediately and enable 2FA.')
+            ->action('Secure Your Account', route('password.change'))
+            ->salutation('Regards, POS Security Team');
+    }
+}
+```
+
+### `app/Notifications/TenantEmailVerification.php`
+
+```php
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\URL;
+
+class TenantEmailVerification extends Notification
+{
+    use Queueable;
+
+    public function via($notifiable): array
+    {
+        return ['mail'];
+    }
+
+    public function toMail($notifiable): MailMessage
+    {
+        $verificationUrl = URL::signedRoute(
+            'tenant.verification.verify',
+            [
+                'id' => $notifiable->getKey(),
+                'hash' => sha1($notifiable->getEmailForVerification()),
+            ]
+        );
+
+        return (new MailMessage)
+            ->subject('Verify Your Email — POS')
+            ->greeting('Hello ' . $notifiable->name . ',')
+            ->line('Please click the button below to verify your email address.')
+            ->action('Verify Email Address', $verificationUrl)
+            ->line('If you did not create an account, no further action is required.')
+            ->salutation('Regards, POS Team');
+    }
+}
+```
+
+### `app/Notifications/TwoFactorOTPNotification.php`
+
+```php
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
+
+class TwoFactorOTPNotification extends Notification
+{
+    use Queueable;
+
+    public function __construct(public string $code) {}
+
+    public function via($notifiable): array
+    {
+        return ['mail'];
+    }
+
+    public function toMail($notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('Your 2FA Code — POS')
+            ->greeting('Hello ' . $notifiable->name . ',')
+            ->line('Your two-factor authentication code is:')
+            ->line('**' . $this->code . '**')
+            ->line('This code expires in 5 minutes.')
+            ->line('If you did not request this, ignore this email.')
+            ->salutation('Regards, POS Team');
     }
 }
 ```

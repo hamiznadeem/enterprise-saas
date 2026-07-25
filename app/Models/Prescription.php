@@ -18,6 +18,7 @@ class Prescription extends Model
         'token_id',
         'diagnosis',
         'notes',
+        'branch_id',
     ];
 
     // Relationships
@@ -41,4 +42,28 @@ class Prescription extends Model
     {
         return $this->hasMany(PrescriptionItem::class);
     }
+
+    
+
+public function branch()
+{
+    return $this->belongsTo(Branch::class);
+}
+
+// ── Scopes ──
+
+public function scopeForBranch($query, int $branchId)
+{
+    return $query->where('branch_id', $branchId);
+}
+
+public function scopeToday($query)
+{
+    return $query->whereDate('created_at', today());
+}
+
+public function scopeForDoctor($query, int $doctorId)
+{
+    return $query->where('doctor_id', $doctorId);
+}
 }

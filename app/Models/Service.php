@@ -24,4 +24,18 @@ class Service extends Model
         'fee' => 'decimal:2',
         'is_active' => 'boolean',
     ];
+
+
+    
+public function tokens()
+{
+    return $this->hasMany(Token::class);
+}
+
+// ── Scopes ──
+
+public function scopeActive($query)
+{
+    return $query->where('is_active', true);
+}
 }

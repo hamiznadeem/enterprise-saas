@@ -22,6 +22,11 @@ This document provides a detailed overview of the database schema for the applic
 | `role` | `varchar(255)` | `default('user')` |
 | `doctor_id` | `bigint` | `unsigned`, `nullable`, `foreign key` |
 | `is_active` | `tinyint(1)` | `default(1)` |
+| `two_factor_enabled` | `tinyint(1)` | `default(0)` |
+| `two_factor_method` | `varchar(20)` | `nullable` |
+| `two_factor_secret` | `text` | `nullable` |
+| `two_factor_recovery_codes` | `text` | `nullable` |
+| `password_changed_at` | `timestamp` | `nullable` |
 | `login_attempts` | `smallint` | `unsigned`, `default(0)` |
 | `locked_until` | `timestamp` | `nullable` |
 
@@ -424,6 +429,23 @@ This document provides a detailed overview of the database schema for the applic
 | `phone` | `varchar(255)` | `nullable` |
 | `is_default` | `tinyint(1)` | `default(0)` |
 | `is_active` | `tinyint(1)` | `default(1)` |
+| `created_at` | `timestamp` | `nullable` |
+| `updated_at` | `timestamp` | `nullable` |
+
+### `tenant_activity_logs`
+
+| Column | Type | Modifiers |
+| --- | --- | --- |
+| `id` | `bigint` | `unsigned`, `auto-increment`, `primary key` |
+| `tenant_id` | `bigint` | `unsigned`, `foreign key` |
+| `user_id` | `bigint` | `unsigned`, `nullable`, `foreign key` |
+| `action` | `varchar(255)` | `index` |
+| `description` | `varchar(255)` | `nullable` |
+| `subject_type` | `varchar(255)` | `nullable` |
+| `subject_id` | `bigint` | `unsigned`, `nullable` |
+| `ip_address` | `varchar(255)` | `nullable` |
+| `user_agent` | `varchar(255)` | `nullable` |
+| `properties` | `json` | `nullable` |
 | `created_at` | `timestamp` | `nullable` |
 | `updated_at` | `timestamp` | `nullable` |
 

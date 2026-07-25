@@ -32,6 +32,7 @@ class PlatformAdmin extends Authenticatable
         'locked_until' => 'datetime',
         'is_active' => 'boolean',
         'password' => 'hashed',
+        'last_login_at' => 'datetime',
     ];
 
     // ── Relationships ──
@@ -96,4 +97,19 @@ class PlatformAdmin extends Authenticatable
     {
         $this->update(['email_verified_at' => now()]);
     }
+
+    
+
+// ── Login Tracking ──
+
+public function recordLogin(): void
+{
+    $this->update(['last_login_at' => now()]);
+}
+
+public function getLastLoginDiffAttribute(): ?string
+{
+    if (!$this->last_login_at) return null;
+    return $this->last_login_at->diffForHumans();
+}
 }

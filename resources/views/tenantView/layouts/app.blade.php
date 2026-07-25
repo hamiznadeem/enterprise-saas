@@ -29,6 +29,10 @@
                         {{ $tenant->name }}
                     </span>
                     @endif
+                    <!-- Dark Mode Toggle -->
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition" title="Toggle Dark Mode">
+                        <i id="darkModeIcon" class="fa-solid fa-moon w-5 h-5"></i>
+                    </button>
 
                     <!-- User Dropdown -->
                     <div class="relative" id="userMenu">
@@ -178,5 +182,27 @@
         if (window.innerWidth >= 1024 && localStorage.getItem('sidebarState') === 'expanded') {
             document.body.classList.add('sidebar-expanded');
         }
+
+        // Dark Mode
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark ? '1' : '0');
+            updateDarkModeIcon();
+        }
+
+        function updateDarkModeIcon() {
+            const icon = document.getElementById('darkModeIcon');
+            if (!icon) return;
+            const isDark = document.documentElement.classList.contains('dark');
+            icon.classList.toggle('fa-moon', !isDark);
+            icon.classList.toggle('fa-sun', isDark);
+        }
+
+        // Restore dark mode on load
+        if (localStorage.getItem('darkMode') === '1') {
+            document.documentElement.classList.add('dark');
+        }
+        updateDarkModeIcon();
     </script>
 @endsection

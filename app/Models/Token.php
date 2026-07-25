@@ -21,6 +21,7 @@ class Token extends Model
         'is_walk_in',
         'called_at',
         'completed_at',
+        'branch_id',
     ];
 
     // Ensure proper data types
@@ -30,7 +31,16 @@ class Token extends Model
         'completed_at' => 'datetime',
     ];
 
+
+
+
     // Relationships: A token belongs to a patient, a doctor, and a service
+
+    public function branch()
+{
+    return $this->belongsTo(Branch::class);
+}
+
     public function patient()
     {
         return $this->belongsTo(Patient::class);
@@ -57,4 +67,81 @@ class Token extends Model
     {
         return $this->hasOne(Prescription::class);
     }
+
+
+    // ── Scopes ──
+
+public function scopeWaiting($query)
+{
+    return $query->where('status', 'waiting');
+}
+
+public function scopeInProgress($query)
+{
+    return $query->where('status', 'in-progress');
+}
+
+public function scopeCompleted($query)
+{
+    return $query->where('status', 'completed');
+}
+
+public function scopeCancelled($query)
+{
+    return $query->where('status', 'cancelled');
+}
+
+public function scopeForDoctor($query, int $doctorId)
+{
+    return $query->where('doctor_id', $doctorId);
+}
+
+public function scopeForBranch($query, int $branchId)
+{
+    return $query->where('branch_id', $branchId);
+}
+
+public function scopeToday($query)
+{
+    return $query->whereDate('created_at', today());
+}
+
+public function scopeWalkIn($query)
+{
+    return $query->where('is_walk_in', true);
+}
+
+
+
+// ── Accessors ──
+
+public function getStatusColorAttribute(): string
+{
+    return match ($this->status) {
+        'waiting'     => 'yellow',
+        'in-progress' => 'blue',
+        'completed'   => 'green',
+        'cancelled'   => 'red',
+        default       => 'gray',
+    };
+}
+
+public function getWaitingDurationAttribute(): ?string
+{
+    if ($this->called_at) {
+        return $this->created_at->diffInSeconds($this->called_at) . 's';
+    }
+    return $this->created_at->diffForHumans();
+}
+
+public function getConsultationDurationAttribute(): ?string
+{
+    if ($this->called_at && $this->completed_at) {
+        $minutes = $this->called_at->diffInMinutes($this->completed_at);
+        return $minutes . ' min';
+    }
+    return null;
+}
+
+
 }

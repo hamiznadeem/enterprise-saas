@@ -20,6 +20,7 @@ class Invoice extends Model
         'total_amount',
         'discount',
         'status',
+        'branch_id',
     ];
 
     // Ensure proper data types
@@ -40,4 +41,55 @@ class Invoice extends Model
     {
         return $this->belongsTo(Token::class);
     }
+
+    
+public function branch()
+{
+    return $this->belongsTo(Branch::class);
+}
+
+public function doctor()
+{
+    return $this->belongsTo(Doctor::class);
+}
+
+
+// ── Scopes ──
+
+public function scopePaid($query)
+{
+    return $query->where('status', 'paid');
+}
+
+public function scopeUnpaid($query)
+{
+    return $query->where('status', 'unpaid');
+}
+
+public function scopeForBranch($query, int $branchId)
+{
+    return $query->where('branch_id', $branchId);
+}
+
+public function scopeToday($query)
+{
+    return $query->whereDate('created_at', today());
+}
+
+// ── Accessors ──
+
+public function getStatusColorAttribute(): string
+{
+    return match ($this->status) {
+        'paid'    => 'green',
+        'unpaid'  => 'red',
+        'partial' => 'yellow',
+        default   => 'gray',
+    };
+}
+
+public function getDueAmountAttribute(): string
+{
+    return max(0, $this->total_amount - $this->discount);
+}
 }

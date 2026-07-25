@@ -25,6 +25,7 @@ class Sale extends Model
         'total_amount',
         'payment_method',
         'status',
+        'branch_id',
     ];
 
     // Ensure proper data types
@@ -52,4 +53,40 @@ class Sale extends Model
     {
         return $this->hasMany(SaleItem::class);
     }
+
+    
+
+public function branch()
+{
+    return $this->belongsTo(Branch::class);
+}
+
+// ──  Scopes ──
+
+public function scopeToday($query)
+{
+    return $query->whereDate('created_at', today());
+}
+
+public function scopeForBranch($query, int $branchId)
+{
+    return $query->where('branch_id', $branchId);
+}
+
+public function scopeByPaymentMethod($query, string $method)
+{
+    return $query->where('payment_method', $method);
+}
+
+// ──  Accessors ──
+
+public function getFormattedTotalAttribute(): string
+{
+    return 'PKR ' . number_format($this->total_amount, 2);
+}
+
+public function getItemCountAttribute(): int
+{
+    return $this->items->sum('quantity');
+}
 }
