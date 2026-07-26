@@ -123,6 +123,9 @@ Route::get('/tenant/billing', function () {
 // ── Main Protected Routes ──
 Route::middleware(['auth', 'active.user', 'email.verified', 'two-factor.verified', 'check.branch', 'tenant.identifier', 'trial'])->group(function () {
     
+    // Clinic Dashboard Route
+    Route::get('/tenant/clinic-dashboard', [App\Http\Controllers\DashboardController::class, 'clinicDashboard'])->name('tenant.clinic-dashboard');
+
     // Patient Routes
     Route::get('/patients', [App\Http\Controllers\PatientController::class, 'index'])->name('patients.index');
     Route::post('/patients', [App\Http\Controllers\PatientController::class, 'store'])->name('patients.store');
@@ -160,9 +163,17 @@ Route::middleware(['auth', 'active.user', 'email.verified', 'two-factor.verified
     Route::get('/pharmacy/dashboard', [App\Http\Controllers\PharmacyController::class, 'index'])->name('pharmacy.dashboard');
 
 
-    // ── Branch Switching ──
+    // ── Branch Switching & Dedicated Branch Setup ──
     Route::post('/branch/switch', [App\Http\Controllers\Tenant\BranchController::class, 'switchBranch'])->name('branch.switch');
     Route::get('/branch/list', [App\Http\Controllers\Tenant\BranchController::class, 'getBranches'])->name('branch.list');
+    Route::get('/branch-setup', [App\Http\Controllers\Tenant\BranchController::class, 'setupIndex'])->name('tenant.branch-setup');
+    Route::post('/branch-setup', [App\Http\Controllers\Tenant\BranchController::class, 'setupUpdate'])->name('tenant.branch-setup.update');
+    Route::post('/branch-setup/store', [App\Http\Controllers\Tenant\BranchController::class, 'storeBranch'])->name('tenant.branch-setup.store');
+    Route::delete('/branch-setup/{id}', [App\Http\Controllers\Tenant\BranchController::class, 'deleteBranch'])->name('tenant.branch-setup.delete');
+
+    // System Setup & Settings
+    Route::get('/setup', [App\Http\Controllers\Tenant\SetupController::class, 'index'])->name('tenant.setup');
+    Route::post('/setup', [App\Http\Controllers\Tenant\SetupController::class, 'update'])->name('tenant.setup.update');
 
     // Activity Logs
     Route::get('/activity-logs', [App\Http\Controllers\Tenant\ActivityLogController::class, 'index'])->name('tenant.activity-logs');

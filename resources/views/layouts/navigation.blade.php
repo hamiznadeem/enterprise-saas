@@ -94,19 +94,47 @@
     <!-- Navigation -->
     <nav class="flex-1 px-2.5 py-4 space-y-4">
         
-        <!-- Main -->
+        <!-- Dashboard -->
         <div>
-            <p class="desktop-hide px-2 mb-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Main</p>
-            <div class="space-y-1">
-                <a href="{{ route('tenant.dashboard') }}" class="tip flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ $isActive('dashboard') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}" data-tip="Dashboard">
+            <p class="desktop-hide px-2 mb-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Dashboard</p>
+            
+            <!-- DESKTOP: Flyout Group -->
+            <div class="nav-group mobile-hide">
+                <button class="tip w-full flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ ($isActive('dashboard') || $isActive('tenant/clinic-dashboard')) ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}" data-tip="Dashboards">
                     <i class="fa-solid fa-table-cells-large w-5 text-center shrink-0"></i>
-                    <span class="desktop-hide">Dashboard</span>
+                </button>
+                <div class="flyout-menu">
+                    <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Dashboards</p>
+                    <a href="{{ route('tenant.dashboard') }}" class="flyout-link {{ ($isActive('dashboard') || $currentPath === 'tenant/dashboard') && !$isActive('tenant/clinic-dashboard') ? 'active' : '' }}">
+                        <i class="fa-solid fa-chart-line w-4 text-center"></i>
+                        POS Dashboard
+                    </a>
+                    <a href="{{ route('tenant.clinic-dashboard') }}" class="flyout-link {{ $isActive('tenant/clinic-dashboard') || $currentPath === 'tenant/clinic-dashboard' ? 'active' : '' }}">
+                        <i class="fa-solid fa-hospital-user w-4 text-center"></i>
+                        Clinic Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- EXPANDED MODE: Simple List -->
+            <div class="space-y-1 desktop-hide">
+                <a href="{{ route('tenant.dashboard') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ ($isActive('dashboard') || $currentPath === 'tenant/dashboard') && !$isActive('tenant/clinic-dashboard') ? '!bg-indigo-600 !text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fa-solid fa-chart-line w-5 text-center shrink-0"></i>
+                    POS Dashboard
                 </a>
-                <a href="{{ route('patients.index') }}" class="tip flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ $isActive('patients') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}" data-tip="Patients">
-                    <i class="fa-solid fa-user-group w-5 text-center shrink-0"></i>
-                    <span class="desktop-hide">Patients</span>
+                <a href="{{ route('tenant.clinic-dashboard') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ $isActive('tenant/clinic-dashboard') || $currentPath === 'tenant/clinic-dashboard' ? '!bg-indigo-600 !text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fa-solid fa-hospital-user w-5 text-center shrink-0"></i>
+                    Clinic Dashboard
                 </a>
             </div>
+        </div>
+
+        <!-- Patients -->
+        <div class="mt-2">
+            <a href="{{ route('patients.index') }}" class="tip flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ $isActive('patients') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}" data-tip="Patients">
+                <i class="fa-solid fa-user-group w-5 text-center shrink-0"></i>
+                <span class="desktop-hide">Patients</span>
+            </a>
         </div>
 
         <!-- Queue -->
@@ -207,11 +235,13 @@
             
             <!-- DESKTOP: Flyout -->
             <div class="nav-group mobile-hide">
-                <button class="tip w-full flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ $isGroupActive(['activity-logs', 'sessions', 'change-password']) ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}" data-tip="System">
+                <button class="tip w-full flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 {{ $isGroupActive(['setup', 'branch-setup', 'activity-logs', 'sessions', 'change-password']) || $isActive('setup') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}" data-tip="System">
                     <i class="fa-solid fa-gear w-5 text-center shrink-0"></i>
                 </button>
                 <div class="flyout-menu">
                     <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">System</p>
+                    <a href="{{ route('tenant.setup') }}" class="flyout-link {{ $isActive('setup') ? 'active' : '' }}"><i class="fa-solid fa-sliders w-4 text-center"></i>System Setup</a>
+                    <a href="{{ route('tenant.branch-setup') }}" class="flyout-link {{ $isActive('branch-setup') ? 'active' : '' }}"><i class="fa-solid fa-code-branch w-4 text-center"></i>Branch Setup</a>
                     <a href="{{ route('tenant.activity-logs') }}" class="flyout-link {{ $isActive('activity-logs') ? 'active' : '' }}"><i class="fa-solid fa-clock-rotate-left w-4 text-center"></i>Activity Logs</a>
                     <a href="{{ route('tenant.sessions.index') }}" class="flyout-link {{ $isActive('sessions') ? 'active' : '' }}"><i class="fa-solid fa-desktop w-4 text-center"></i>Active Sessions</a>
                     <a href="{{ route('password.change') }}" class="flyout-link {{ $isActive('change-password') ? 'active' : '' }}"><i class="fa-solid fa-key w-4 text-center"></i>Change Password</a>
@@ -221,6 +251,12 @@
 
             <!-- EXPANDED: Normal list -->
             <div class="space-y-1 desktop-hide">
+                <a href="{{ route('tenant.setup') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('setup') ? '!bg-indigo-600 !text-white' : '' }}">
+                    <i class="fa-solid fa-sliders w-5 text-center shrink-0"></i>System Setup
+                </a>
+                <a href="{{ route('tenant.branch-setup') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('branch-setup') ? '!bg-indigo-600 !text-white' : '' }}">
+                    <i class="fa-solid fa-code-branch w-5 text-center shrink-0"></i>Branch Setup
+                </a>
                 <a href="{{ route('tenant.activity-logs') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('activity-logs') ? '!bg-indigo-600 !text-white' : '' }}">
                     <i class="fa-solid fa-clock-rotate-left w-5 text-center shrink-0"></i>Activity Logs
                 </a>
@@ -230,7 +266,7 @@
                 <a href="{{ route('password.change') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('change-password') ? '!bg-indigo-600 !text-white' : '' }}">
                     <i class="fa-solid fa-key w-5 text-center shrink-0"></i>Change Password
                 </a>
-                <a href="{{ route('two-factor.index') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('change-password') ? '!bg-indigo-600 !text-white' : '' }}">
+                <a href="{{ route('two-factor.index') }}" class="flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition {{ $isActive('two-factor') ? '!bg-indigo-600 !text-white' : '' }}">
                     <i class="fa-solid fa-shield-halved w-5 text-center shrink-0"></i>Two-Factor Auth
                 </a>
             </div>

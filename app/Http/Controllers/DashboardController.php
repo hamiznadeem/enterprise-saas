@@ -11,6 +11,11 @@ class DashboardController extends Controller
 {
     public function __invoke()
     {
+        return view('tenantView.dashboard');
+    }
+
+    public function clinicDashboard()
+    {
         $todayPatients = Patient::whereDate('created_at', today())->count();
         $waitingTokens = Token::where('status', 'waiting')->count();
         $inProgressTokens = Token::where('status', 'in-progress')->count();
@@ -29,7 +34,7 @@ class DashboardController extends Controller
             ->whereDate('updated_at', today())
             ->count();
 
-        return view('tenantView.dashboard', compact(
+        return view('tenantView.clinic_dashboard', compact(
             'todayPatients',
             'waitingTokens',
             'inProgressTokens',

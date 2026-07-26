@@ -10,39 +10,141 @@
     <!-- Main Area -->
     <div id="mainContent" class="min-h-screen flex flex-col transition-all duration-300">
 
-        <!-- Top Bar -->
-        <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-200/80">
+        <!-- Top Bar Header (Standard, Uniform Across All Pages) -->
+        <header class="sticky top-0 z-30 bg-white border-b border-gray-200">
             <div class="flex items-center justify-between h-16 px-4 sm:px-6">
+                
+                <!-- Left Side: Mobile Menu Button & Page Title -->
                 <div class="flex items-center gap-3">
                     <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
                     </button>
                     @isset($header)
-                        <div class="text-sm font-medium text-gray-700">{{ $header }}</div>
+                        <div class="text-sm font-semibold text-gray-800 tracking-tight">{{ $header }}</div>
                     @endisset
                 </div>
-                <div class="flex items-center gap-2">
-                    <!-- Tenant Name Badge -->
-                    @if($tenant = app('currentTenant'))
-                    <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium">
-                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-                        {{ $tenant->name }}
-                    </span>
-                    @endif
-                    <!-- Dark Mode Toggle -->
-                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition" title="Toggle Dark Mode">
-                        <i id="darkModeIcon" class="fa-solid fa-moon w-5 h-5"></i>
-                    </button>
 
-                    <!-- User Dropdown -->
+                <!-- Right Side: Branch Switcher Dropdown, Search, Notification Icon, User Profile -->
+                <div class="flex items-center gap-3">
+                    
+                    <!-- 1. Search Bar -->
+                    <div class="relative hidden sm:block w-44 md:w-56">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" placeholder="Search..." class="w-full pl-8 pr-3 py-1.5 bg-gray-100/80 focus:bg-white border border-transparent focus:border-indigo-300 rounded-lg text-xs text-gray-800 placeholder-gray-400 outline-none transition">
+                    </div>
+
+                    <!-- 2. Working Branch Switcher Dropdown -->
+                    @php
+                        $userBranches = auth()->check() ? auth()->user()->branches()->where('is_active', true)->get() : collect();
+                        $currentBranch = app()->bound('currentBranch') ? app('currentBranch') : null;
+                        if(!$currentBranch && $userBranches->isNotEmpty()) {
+                            $currentBranchId = session('current_branch_id');
+                            $currentBranch = $userBranches->where('id', $currentBranchId)->first() ?: $userBranches->first();
+                        }
+                    @endphp
+
+                    @if($userBranches->isNotEmpty())
+                    <div class="relative" x-data="{ openBranchMenu: false }">
+                        <button @click="openBranchMenu = !openBranchMenu" @click.away="openBranchMenu = false" class="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold border border-indigo-200 transition cursor-pointer" title="Switch Active Branch">
+                            <i class="fa-solid fa-code-branch text-indigo-600"></i>
+                            <span class="max-w-[110px] truncate">{{ $currentBranch ? $currentBranch->branch_name : 'Select Branch' }}</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] text-indigo-400"></i>
+                        </button>
+
+                        <!-- Branch Dropdown Options -->
+                        <div x-show="openBranchMenu" 
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-1.5 z-50 text-xs" 
+                             style="display: none;">
+                            
+                            <div class="px-3 py-1.5 bg-gray-50 border-b border-gray-100 text-[10px] font-bold text-gray-500 uppercase tracking-wider flex items-center justify-between">
+                                <span>Switch Store Branch</span>
+                                <span class="text-[9px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">{{ $userBranches->count() }} Available</span>
+                            </div>
+
+                            <div class="py-1">
+                                @foreach($userBranches as $b)
+                                <form method="POST" action="{{ route('branch.switch') }}">
+                                    @csrf
+                                    <input type="hidden" name="branch_id" value="{{ $b->id }}">
+                                    <button type="submit" class="w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-indigo-50 transition text-xs cursor-pointer {{ $currentBranch && $currentBranch->id == $b->id ? 'bg-indigo-50/70 font-bold text-indigo-700' : 'text-gray-700' }}">
+                                        <span class="flex items-center gap-2 truncate">
+                                            <i class="fa-solid fa-building text-[11px] {{ $currentBranch && $currentBranch->id == $b->id ? 'text-indigo-600' : 'text-gray-400' }}"></i>
+                                            {{ $b->branch_name }}
+                                        </span>
+                                        @if($currentBranch && $currentBranch->id == $b->id)
+                                            <i class="fa-solid fa-check text-indigo-600 text-xs"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- 3. Notification Icon -->
+                    <div class="relative" x-data="{ openNotif: false }">
+                        <button @click="openNotif = !openNotif" @click.away="openNotif = false" class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition" title="Notifications">
+                            <i class="fa-regular fa-bell text-base"></i>
+                            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500"></span>
+                        </button>
+
+                        <div x-show="openNotif" 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-50 text-xs" 
+                             style="display: none;">
+                            
+                            <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+                                <span class="font-bold text-gray-800">Notifications</span>
+                                <span class="px-1.5 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[10px] font-semibold">3 Unread</span>
+                            </div>
+
+                            <div class="divide-y divide-gray-100 max-h-64 overflow-y-auto">
+                                <a href="#" class="flex gap-2.5 px-4 py-2.5 hover:bg-gray-50 transition">
+                                    <i class="fa-solid fa-circle-exclamation text-amber-500 text-sm mt-0.5"></i>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-800">Low Stock Alert</p>
+                                        <p class="text-[11px] text-gray-500">Item 'Python Programming' low in stock.</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="flex gap-2.5 px-4 py-2.5 hover:bg-gray-50 transition">
+                                    <i class="fa-solid fa-circle-check text-emerald-500 text-sm mt-0.5"></i>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-800">Sale Posted</p>
+                                        <p class="text-[11px] text-gray-500">Invoice #INV-1092 generated successfully.</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="p-2 bg-gray-50 border-t border-gray-100 text-center">
+                                <a href="{{ Route::has('tenant.activity-logs') ? route('tenant.activity-logs') : '#' }}" class="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800">
+                                    View Activity Logs
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. User Profile Dropdown -->
                     <div class="relative" id="userMenu">
-                        <button onclick="document.getElementById('userDropdown').classList.toggle('hidden')" class="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 transition">
-                            <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+                        <button onclick="document.getElementById('userDropdown').classList.toggle('hidden')" class="flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 transition">
+                            <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-xs">
                                 {{ auth()->user()->name ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'U' }}
                             </div>
                             <span class="hidden sm:block text-sm font-medium text-gray-700 max-w-[120px] truncate">{{ auth()->user()->name }}</span>
                             <svg class="w-4 h-4 text-gray-400 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
                         </button>
+
                         <div id="userDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-1.5 z-50">
                             <div class="px-4 py-2.5 border-b border-gray-100">
                                 <p class="text-sm font-medium text-gray-900 truncate">{{ auth()->user()->name }}</p>
@@ -50,7 +152,7 @@
                             </div>
                             <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
                                 <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-                                Profile
+                                Profile Settings
                             </a>
                             @if(auth()->user()->role === 'super_admin')
                             <a href="{{ route('superAdmin.dashboard') }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
@@ -69,6 +171,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </header>
