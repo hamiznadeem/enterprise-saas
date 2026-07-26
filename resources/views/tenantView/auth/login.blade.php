@@ -73,7 +73,7 @@
                 <div class="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center">
                     <i class="fa-solid fa-bolt text-white text-sm"></i>
                 </div>
-                <span class="text-xl font-extrabold text-gray-900 tracking-tight">SwiftPOS</span>
+                <span class="text-xl font-extrabold text-gray-900 tracking-tight">POS</span>
             </a>
         </div>
 
