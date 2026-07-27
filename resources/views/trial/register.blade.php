@@ -3,432 +3,501 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Start Free Trial —  POS</title>
+    <title>Start 14-Day Free Trial — Enterprise POS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        *{font-family:'Inter',sans-serif;margin:0;padding:0;box-sizing:border-box;}
-        body{background:#f0f4f8;min-height:100vh;}
-
-        /* ── Top Bar ── */
-        .top-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;}
-        .top-bar .logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none;}
-        .top-bar .logo-icon{width:2rem;height:2rem;background:#2563eb;border-radius:0.5rem;display:flex;align-items:center;justify-content:center;}
-        .top-bar .logo-text{font-weight:700;font-size:1.125rem;color:#1e293b;}
-        .top-bar .login-link{font-size:0.8125rem;color:#64748b;text-decoration:none;font-weight:500;}
-        .top-bar .login-link:hover{color:#2563eb;}
-
-        /* ── Hero ── */
-        .hero{text-align:center;padding:2.5rem 1rem 1.5rem;}
-        .hero h1{font-size:1.75rem;font-weight:800;color:#0f172a;line-height:1.3;}
-        .hero h1 span{color:#2563eb;}
-        .hero p{font-size:0.9375rem;color:#64748b;margin-top:0.5rem;}
-
-        /* ── Container ── */
-        .container{max-width:40rem;margin:0 auto;padding:0 1rem 3rem;}
-
-        /* ── Section Label ── */
-        .section-label{font-size:0.875rem;font-weight:600;color:#334155;margin-bottom:0.75rem;}
-
-        /* ── Business Type Cards ── */
-        .biz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.625rem;margin-bottom:1.75rem;}
-        .biz-card{background:#fff;border:2px solid #e2e8f0;border-radius:0.875rem;padding:1.25rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s ease;user-select:none;position:relative;}
-        .biz-card:hover{border-color:#93c5fd;background:#f8faff;}
-        .biz-card.active{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,0.12);}
-        .biz-card .biz-icon{width:2.75rem;height:2.75rem;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin:0 auto 0.5rem;font-size:1.25rem;}
-        .biz-card .biz-label{font-size:0.75rem;font-weight:600;color:#334155;line-height:1.3;}
-        .biz-card.active .biz-label{color:#2563eb;}
-        .biz-card .check-mark{position:absolute;top:0.375rem;right:0.5rem;width:1.125rem;height:1.125rem;background:#2563eb;border-radius:50%;display:none;align-items:center;justify-content:center;}
-        .biz-card.active .check-mark{display:flex;}
-
-        /* ── Outlet Pills ── */
-        .outlet-pills{display:flex;gap:0.625rem;flex-wrap:wrap;margin-bottom:1.75rem;}
-        .outlet-pill{background:#fff;border:2px solid #e2e8f0;border-radius:2rem;padding:0.5rem 1.5rem;font-size:0.8125rem;font-weight:600;color:#475569;cursor:pointer;transition:all 0.2s ease;user-select:none;}
-        .outlet-pill:hover{border-color:#93c5fd;}
-        .outlet-pill.active{border-color:#2563eb;background:#2563eb;color:#fff;}
-
-        /* ── Form Card ── */
-        .form-card{background:#fff;border-radius:1rem;border:1px solid #e2e8f0;padding:1.75rem;margin-bottom:2rem;}
-
-        /* ── Input ── */
-        .field{margin-bottom:1rem;}
-        .field label{display:block;font-size:0.8125rem;font-weight:500;color:#475569;margin-bottom:0.375rem;}
-        .field input{width:100%;padding:0.6875rem 0.875rem;border:1.5px solid #e2e8f0;border-radius:0.625rem;font-size:0.875rem;outline:none;transition:border-color 0.15s,box-shadow 0.15s;background:#f8fafc;}
-        .field input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.08);background:#fff;}
-        .field input::placeholder{color:#94a3b8;}
-        .field-pw{position:relative;}
-        .field-pw input{padding-right:2.75rem;}
-        .toggle-pw{position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94a3b8;padding:0.25rem;}
-        .toggle-pw:hover{color:#64748b;}
-
-        /* ── URL Field ── */
-        .url-field{display:flex;align-items:stretch;border:1.5px solid #e2e8f0;border-radius:0.625rem;overflow:hidden;transition:border-color 0.15s,box-shadow 0.15s;background:#f8fafc;}
-        .url-field:focus-within{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.08);background:#fff;}
-        .url-field input{border:none;background:transparent;outline:none;padding:0.6875rem 0.875rem;font-size:0.875rem;flex:1;color:#334155;font-weight:500;}
-        .url-field input::placeholder{color:#94a3b8;font-weight:400;}
-        .url-suffix{display:flex;align-items:center;padding:0 0.875rem;background:#f1f5f9;font-size:0.8125rem;color:#64748b;font-weight:500;white-space:nowrap;border-left:1px solid #e2e8f0;}
-
-        /* ── Plan Cards ── */
-        .plan-card{background:#f8fafc;border:2px solid #e2e8f0;border-radius:0.75rem;padding:1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s ease;user-select:none;position:relative;}
-        .plan-card:hover{border-color:#93c5fd;}
-        .plan-card.active{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,0.12);}
-        .plan-card .plan-name{font-size:0.8125rem;font-weight:700;color:#1e293b;margin-bottom:0.25rem;}
-        .plan-card.active .plan-name{color:#2563eb;}
-        .plan-card .plan-price{font-size:0.75rem;color:#64748b;}
-        .plan-card .plan-trial{font-size:0.6875rem;color:#059669;font-weight:600;margin-top:0.25rem;}
-        .plan-card .check-mark{position:absolute;top:0.25rem;right:0.375rem;width:1rem;height:1rem;background:#2563eb;border-radius:50%;display:none;align-items:center;justify-content:center;}
-        .plan-card.active .check-mark{display:flex;}
-
-        /* ── Error Box ── */
-        .error-box{background:#fef2f2;border:1px solid #fecaca;border-radius:0.625rem;padding:0.75rem 1rem;margin-bottom:1rem;}
-        .error-box ul{list-style:none;padding:0;margin:0;}
-        .error-box li{font-size:0.8125rem;color:#dc2626;padding:0.125rem 0;}
-
-        /* ── Honeypot ── */
-        .hp-field{position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden;}
-
-        /* ── Submit Button ── */
-        .btn-submit{width:100%;padding:0.8125rem;background:#2563eb;color:#fff;font-size:0.9375rem;font-weight:700;border:none;border-radius:0.625rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;transition:all 0.15s ease;box-shadow:0 4px 14px -2px rgba(37,99,235,0.35);letter-spacing:0.01em;}
-        .btn-submit:hover{background:#1d4ed8;box-shadow:0 6px 20px -2px rgba(37,99,235,0.45);}
-        .btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
-        .spinner{width:1.125rem;height:1.125rem;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;}
-        @keyframes spin{to{transform:rotate(360deg);}}
-
-        /* ── Testimonials ── */
-        .testimonials{margin-top:1rem;}
-        .testimonials h3{font-size:0.875rem;font-weight:700;color:#334155;text-align:center;margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.05em;}
-        .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;}
-        .testi-card{background:#fff;border:1px solid #e2e8f0;border-radius:0.875rem;padding:1.25rem;text-align:center;}
-        .testi-card img{width:2.5rem;height:2.5rem;border-radius:50%;object-fit:cover;margin:0 auto 0.5rem;border:2px solid #e2e8f0;}
-        .testi-card .testi-name{font-size:0.8125rem;font-weight:600;color:#1e293b;}
-        .testi-card .testi-role{font-size:0.6875rem;color:#94a3b8;margin-bottom:0.5rem;}
-        .testi-card .testi-text{font-size:0.75rem;color:#64748b;line-height:1.5;font-style:italic;}
-        .testi-card .testi-stars{color:#f59e0b;font-size:0.625rem;margin-bottom:0.375rem;}
-
-        /* ── Footer ── */
-        .footer-text{text-align:center;font-size:0.75rem;color:#94a3b8;margin-top:1.5rem;}
-        .footer-text a{color:#2563eb;text-decoration:none;font-weight:500;}
-        .footer-text a:hover{text-decoration:underline;}
-
-        /* ── Row Grid ── */
-        .row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-
-        /* ── Responsive ── */
-        @media(max-width:640px){
-            .biz-grid{grid-template-columns:repeat(2,1fr);}
-            .testi-grid{grid-template-columns:1fr;}
-            .plan-grid{grid-template-columns:1fr;}
-            .hero h1{font-size:1.375rem;}
-            .form-card{padding:1.25rem;}
-            .row-2{grid-template-columns:1fr;}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        indigo: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                            800: '#3730a3', 900: '#312e81', 950: '#1e1b4b',
+                        }
+                    }
+                }
+            }
         }
+    </script>
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        
+        .biz-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .biz-card:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+        }
+        .biz-card.active {
+            border-color: #4f46e5 !important;
+            background-color: #eef2ff !important;
+            transform: translateY(-2px);
+        }
+        .biz-card.active .biz-title { color: #4f46e5; font-weight: 800; }
+        .biz-card.active .check-badge { display: flex; }
+        .biz-card.active .biz-icon {
+            background-color: #4f46e5 !important;
+            color: #ffffff !important;
+            border-color: #4338ca !important;
+        }
+
+        .outlet-pill.active {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .input-group:focus-within .input-icon {
+            color: #4f46e5;
+        }
+
+        .spinner {
+            width: 1.125rem; height: 1.125rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 min-h-screen lg:h-screen lg:overflow-hidden">
 
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <a href="{{ route('landing') }}" class="logo">
-            <div class="logo-icon"><i class="fa-solid fa-bolt" style="color:#fff;font-size:0.75rem;"></i></div>
-            <span class="logo-text"> POS</span>
-        </a>
+    <!-- 2-Column Split Layout Grid -->
+    <div class="w-full h-full grid grid-cols-1 lg:grid-cols-12 items-stretch">
+        
+        <!-- LEFT COLUMN: ZERO-SCROLL COMPACT BRAND PANEL (5 Cols Desktop) -->
+        <div class="lg:col-span-5 bg-slate-900 p-6 lg:p-8 flex flex-col justify-between border-r border-slate-800 relative overflow-hidden lg:h-screen lg:sticky lg:top-0">
+            <div>
+                <!-- Brand Header -->
+                <a href="/" class="inline-flex items-center gap-3 mb-8">
+                    <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+                        <i class="fa-solid fa-bolt text-xs"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-white text-lg tracking-tight block leading-none">Enterprise POS</span>
+                        <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Cloud Retail & POS Platform</span>
+                    </div>
+                </a>
+
+                <!-- Main Value Headline -->
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-slate-800 border border-slate-700 text-indigo-300 text-[11px] font-semibold rounded-md mb-3">
+                        <i class="fa-solid fa-star text-[10px] text-amber-400"></i> Trusted by 500+ Businesses
+                    </span>
+                    <h1 class="text-xl lg:text-2xl font-extrabold text-white tracking-tight leading-snug">
+                        Power Your Store Operations in One Smart Platform
+                    </h1>
+                    <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                        Instant billing checkout, real-time inventory tracking, and multi-branch management.
+                    </p>
+                </div>
+
+                <!-- 3 Compact Key Feature Bullets -->
+                <div class="mt-6 space-y-3 text-xs text-slate-300">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                        </div>
+                        <span class="font-medium text-slate-200">Touchscreen Billing & Barcode Reader Ready</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                        </div>
+                        <span class="font-medium text-slate-200">Automated Inventory & Batch Expiry Tracking</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                        </div>
+                        <span class="font-medium text-slate-200">Multi-Branch Outlets & Clinic Queue Tokens</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZERO-SCROLL FIT CUSTOMER TESTIMONIAL CARD -->
+            <div class="pt-4 border-t border-slate-800 shrink-0">
+                <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3.5">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <div class="flex items-center gap-1 text-amber-400 text-[11px]">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <span class="text-[10px] text-emerald-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-700">Verified Owner</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed italic">
+                        "Billing speed improved significantly from day 1. Best decision for our retail outlets!"
+                    </p>
+                    <div class="mt-2.5 flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center">
+                            BA
+                        </div>
+                        <div class="truncate">
+                            <span class="text-xs font-bold text-white block truncate leading-none">Bilal Ahmed</span>
+                            <span class="text-[10px] text-slate-400 block truncate">Owner, SuperMart Chain</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-    <!-- Hero -->
-    <div class="hero">
-        <h1>Register your  POS today for <span>FREE</span></h1>
-        <p>Get started in 2 minutes. No credit card required.</p>
-    </div>
+        <!-- RIGHT COLUMN: Scrollable Form Panel (7 Cols Desktop) -->
+        <div class="lg:col-span-7 bg-slate-50 text-slate-900 p-6 lg:p-12 lg:h-screen lg:overflow-y-auto flex flex-col justify-between">
+            
+            <div class="max-w-xl mx-auto w-full">
+                
+                <!-- Form Header -->
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
+                    <div>
+                        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-[11px] font-extrabold rounded-md border border-indigo-100 uppercase tracking-wider">
+                            14-Day Free Trial
+                        </span>
+                        <h2 class="text-xl lg:text-2xl font-extrabold text-slate-900 tracking-tight mt-2">
+                            Create Your Business Account
+                        </h2>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-emerald-600 font-bold block"><i class="fa-solid fa-bolt text-[10px]"></i> Instant Access</span>
+                        <span class="text-[10px] text-slate-400">No Credit Card Required</span>
+                    </div>
+                </div>
 
-    <div class="container">
+                <form id="trialForm" method="POST" action="{{ route('trial.register') }}" class="space-y-6 pb-12">
+                    @csrf
 
-        <form method="POST" action="{{ route('trial.register') }}" id="trialForm">
-            @csrf
+                    <!-- Honeypot -->
+                    <div class="hidden"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
 
-            <!-- Honeypot -->
-            <div class="hp-field"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+                    @if ($errors->any())
+                        <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-xs text-red-800 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <p class="flex items-center gap-2 font-medium">
+                                    <i class="fa-solid fa-circle-exclamation text-red-600"></i>
+                                    <span>{{ $error }}</span>
+                                </p>
+                            @endforeach
+                        </div>
+                    @endif
 
-            @if ($errors->any())
-                <div class="error-box">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li><i class="fa-solid fa-circle-exclamation" style="margin-right:0.25rem;"></i>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+                    <!-- SECTION 1: BUSINESS INDUSTRY CARDS WITH UNIFIED BRAND ICONS -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center">1</span>
+                                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Select Business Industry</h3>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-semibold">Choose your business model</span>
+                        </div>
 
-            <!-- Business Type -->
-            <p class="section-label">What type of business do you run?</p>
-            <div class="biz-grid">
-                <div class="biz-card @if(old('business_type') == 'mart') active @endif" onclick="selectBiz(this, 'mart')">
-                    <div class="check-mark"><i class="fa-solid fa-check" style="color:#fff;font-size:0.5625rem;"></i></div>
-                    <div class="biz-icon" style="background:#fff7ed;color:#ea580c;"><i class="fa-solid fa-cart-shopping"></i></div>
-                    <div class="biz-label">Mart / Grocery</div>
-                </div>
-                <div class="biz-card @if(old('business_type') == 'restaurant') active @endif" onclick="selectBiz(this, 'restaurant')">
-                    <div class="check-mark"><i class="fa-solid fa-check" style="color:#fff;font-size:0.5625rem;"></i></div>
-                    <div class="biz-icon" style="background:#fef2f2;color:#dc2626;"><i class="fa-solid fa-utensils"></i></div>
-                    <div class="biz-label">Restaurant</div>
-                </div>
-                <div class="biz-card @if(old('business_type') == 'cafe') active @endif" onclick="selectBiz(this, 'cafe')">
-                    <div class="check-mark"><i class="fa-solid fa-check" style="color:#fff;font-size:0.5625rem;"></i></div>
-                    <div class="biz-icon" style="background:#fffbeb;color:#d97706;"><i class="fa-solid fa-mug-hot"></i></div>
-                    <div class="biz-label">Cafe / Bakery</div>
-                </div>
-                <div class="biz-card @if(old('business_type') == 'retail') active @endif" onclick="selectBiz(this, 'retail')">
-                    <div class="check-mark"><i class="fa-solid fa-check" style="color:#fff;font-size:0.5625rem;"></i></div>
-                    <div class="biz-icon" style="background:#fdf2f8;color:#db2777;"><i class="fa-solid fa-shirt"></i></div>
-                    <div class="biz-label">Retail / Fashion</div>
-                </div>
-                <div class="biz-card @if(old('business_type') == 'clinic') active @endif" onclick="selectBiz(this, 'clinic')">
-                    <div class="check-mark"><i class="fa-solid fa-check" style="color:#fff;font-size:0.5625rem;"></i></div>
-                    <div class="biz-icon" style="background:#ecfdf5;color:#059669;"><i class="fa-solid fa-heart-pulse"></i></div>
-                    <div class="biz-label">Clinic / Pharmacy</div>
-                </div>
-                <div class="biz-card @if(old('business_type') == 'general_store') active @endif" onclick="selectBiz(this, 'general_store')">
-                    <div class="check-mark"><i class="fa-solid fa-check" style="color:#fff;font-size:0.5625rem;"></i></div>
-                    <div class="biz-icon" style="background:#f5f3ff;color:#7c3aed;"><i class="fa-solid fa-store"></i></div>
-                    <div class="biz-label">General Store</div>
-                </div>
+                        <!-- Industry Cards Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            
+                            <!-- 1. Mart & Grocery -->
+                            <div class="biz-card border-2 border-slate-200 rounded-xl p-3.5 cursor-pointer relative bg-white hover:bg-slate-50 transition flex items-center gap-3.5 @if(old('business_type') == 'mart') active @endif" onclick="selectBiz(this, 'mart')">
+                                <div class="check-badge hidden absolute top-2.5 right-2.5 w-4 h-4 bg-indigo-600 rounded-full items-center justify-center text-white text-[9px]">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div class="biz-icon w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center text-sm shrink-0 transition">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                </div>
+                                <div>
+                                    <div class="biz-title text-xs font-bold text-slate-900">Mart & Grocery</div>
+                                    <div class="text-[10px] text-slate-500 font-medium mt-0.5">Barcode & Stock Control</div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Restaurant -->
+                            <div class="biz-card border-2 border-slate-200 rounded-xl p-3.5 cursor-pointer relative bg-white hover:bg-slate-50 transition flex items-center gap-3.5 @if(old('business_type') == 'restaurant') active @endif" onclick="selectBiz(this, 'restaurant')">
+                                <div class="check-badge hidden absolute top-2.5 right-2.5 w-4 h-4 bg-indigo-600 rounded-full items-center justify-center text-white text-[9px]">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div class="biz-icon w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center text-sm shrink-0 transition">
+                                    <i class="fa-solid fa-utensils"></i>
+                                </div>
+                                <div>
+                                    <div class="biz-title text-xs font-bold text-slate-900">Restaurant</div>
+                                    <div class="text-[10px] text-slate-500 font-medium mt-0.5">KOT & Table Orders</div>
+                                </div>
+                            </div>
+
+                            <!-- 3. Cafe & Bakery -->
+                            <div class="biz-card border-2 border-slate-200 rounded-xl p-3.5 cursor-pointer relative bg-white hover:bg-slate-50 transition flex items-center gap-3.5 @if(old('business_type') == 'cafe') active @endif" onclick="selectBiz(this, 'cafe')">
+                                <div class="check-badge hidden absolute top-2.5 right-2.5 w-4 h-4 bg-indigo-600 rounded-full items-center justify-center text-white text-[9px]">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div class="biz-icon w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center text-sm shrink-0 transition">
+                                    <i class="fa-solid fa-mug-hot"></i>
+                                </div>
+                                <div>
+                                    <div class="biz-title text-xs font-bold text-slate-900">Cafe & Bakery</div>
+                                    <div class="text-[10px] text-slate-500 font-medium mt-0.5">Takeaway & Modifiers</div>
+                                </div>
+                            </div>
+
+                            <!-- 4. Retail & Fashion -->
+                            <div class="biz-card border-2 border-slate-200 rounded-xl p-3.5 cursor-pointer relative bg-white hover:bg-slate-50 transition flex items-center gap-3.5 @if(old('business_type') == 'retail') active @endif" onclick="selectBiz(this, 'retail')">
+                                <div class="check-badge hidden absolute top-2.5 right-2.5 w-4 h-4 bg-indigo-600 rounded-full items-center justify-center text-white text-[9px]">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div class="biz-icon w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center text-sm shrink-0 transition">
+                                    <i class="fa-solid fa-shirt"></i>
+                                </div>
+                                <div>
+                                    <div class="biz-title text-xs font-bold text-slate-900">Retail & Apparel</div>
+                                    <div class="text-[10px] text-slate-500 font-medium mt-0.5">Size Variants & Loyalty</div>
+                                </div>
+                            </div>
+
+                            <!-- 5. Clinic & Pharmacy -->
+                            <div class="biz-card border-2 border-slate-200 rounded-xl p-3.5 cursor-pointer relative bg-white hover:bg-slate-50 transition flex items-center gap-3.5 @if(old('business_type') == 'clinic') active @endif" onclick="selectBiz(this, 'clinic')">
+                                <div class="check-badge hidden absolute top-2.5 right-2.5 w-4 h-4 bg-indigo-600 rounded-full items-center justify-center text-white text-[9px]">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div class="biz-icon w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center text-sm shrink-0 transition">
+                                    <i class="fa-solid fa-heart-pulse"></i>
+                                </div>
+                                <div>
+                                    <div class="biz-title text-xs font-bold text-slate-900">Clinic & Pharmacy</div>
+                                    <div class="text-[10px] text-slate-500 font-medium mt-0.5">Queue Tokens & Rx</div>
+                                </div>
+                            </div>
+
+                            <!-- 6. General Superstore -->
+                            <div class="biz-card border-2 border-slate-200 rounded-xl p-3.5 cursor-pointer relative bg-white hover:bg-slate-50 transition flex items-center gap-3.5 @if(old('business_type') == 'general_store') active @endif" onclick="selectBiz(this, 'general_store')">
+                                <div class="check-badge hidden absolute top-2.5 right-2.5 w-4 h-4 bg-indigo-600 rounded-full items-center justify-center text-white text-[9px]">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div class="biz-icon w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center text-sm shrink-0 transition">
+                                    <i class="fa-solid fa-store"></i>
+                                </div>
+                                <div>
+                                    <div class="biz-title text-xs font-bold text-slate-900">General Superstore</div>
+                                    <div class="text-[10px] text-slate-500 font-medium mt-0.5">Fast Cashier Billing</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <input type="hidden" id="business_type" name="business_type" value="{{ old('business_type') }}">
+
+                        <!-- Outlets Selector -->
+                        <div class="mt-4 pt-3.5 border-t border-slate-100">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                                Outlets Maintained
+                            </label>
+                            <div class="flex flex-wrap gap-2">
+                                <div class="outlet-pill border-2 border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold text-slate-700 cursor-pointer bg-white transition @if(old('outlets') == '1') active @endif" onclick="selectOutlet(this, '1')">1 Outlet</div>
+                                <div class="outlet-pill border-2 border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold text-slate-700 cursor-pointer bg-white transition @if(old('outlets') == '2-5') active @endif" onclick="selectOutlet(this, '2-5')">2 – 5 Outlets</div>
+                                <div class="outlet-pill border-2 border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold text-slate-700 cursor-pointer bg-white transition @if(old('outlets') == '6-10') active @endif" onclick="selectOutlet(this, '6-10')">6 – 10 Outlets</div>
+                                <div class="outlet-pill border-2 border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold text-slate-700 cursor-pointer bg-white transition @if(old('outlets') == '10+') active @endif" onclick="selectOutlet(this, '10+')">10+ Outlets</div>
+                            </div>
+                            <input type="hidden" id="outlets" name="outlets" value="{{ old('outlets') }}">
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: Store Identity & Icon-Prefixed Inputs -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center">2</span>
+                            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Store Identity & Location</h3>
+                        </div>
+
+                        <!-- Shop Name & Subdomain -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Shop / Business Name</label>
+                                <div class="input-group relative">
+                                    <i class="fa-solid fa-store input-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition"></i>
+                                    <input type="text" id="business_name" name="business_name" value="{{ old('business_name') }}" required placeholder="My Super Mart" oninput="autoSlug()"
+                                           class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition font-medium">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">City</label>
+                                <div class="input-group relative">
+                                    <i class="fa-solid fa-location-dot input-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition pointer-events-none"></i>
+                                    <select id="city" name="city" required class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition font-medium cursor-pointer appearance-none">
+                                        <option value="" disabled {{ old('city') ? '' : 'selected' }}>Select city...</option>
+                                        <option value="Karachi" {{ old('city') == 'Karachi' ? 'selected' : '' }}>Karachi</option>
+                                        <option value="Lahore" {{ old('city') == 'Lahore' ? 'selected' : '' }}>Lahore</option>
+                                        <option value="Faisalabad" {{ old('city') == 'Faisalabad' ? 'selected' : '' }}>Faisalabad</option>
+                                        <option value="Rawalpindi" {{ old('city') == 'Rawalpindi' ? 'selected' : '' }}>Rawalpindi</option>
+                                        <option value="Gujranwala" {{ old('city') == 'Gujranwala' ? 'selected' : '' }}>Gujranwala</option>
+                                        <option value="Peshawar" {{ old('city') == 'Peshawar' ? 'selected' : '' }}>Peshawar</option>
+                                        <option value="Multan" {{ old('city') == 'Multan' ? 'selected' : '' }}>Multan</option>
+                                        <option value="Hyderabad" {{ old('city') == 'Hyderabad' ? 'selected' : '' }}>Hyderabad</option>
+                                        <option value="Islamabad" {{ old('city') == 'Islamabad' ? 'selected' : '' }}>Islamabad</option>
+                                        <option value="Quetta" {{ old('city') == 'Quetta' ? 'selected' : '' }}>Quetta</option>
+                                        <option value="Bahawalpur" {{ old('city') == 'Bahawalpur' ? 'selected' : '' }}>Bahawalpur</option>
+                                        <option value="Sargodha" {{ old('city') == 'Sargodha' ? 'selected' : '' }}>Sargodha</option>
+                                        <option value="Sialkot" {{ old('city') == 'Sialkot' ? 'selected' : '' }}>Sialkot</option>
+                                        <option value="Sukkur" {{ old('city') == 'Sukkur' ? 'selected' : '' }}>Sukkur</option>
+                                        <option value="Abbottabad" {{ old('city') == 'Abbottabad' ? 'selected' : '' }}>Abbottabad</option>
+                                        <option value="Other" {{ old('city') == 'Other' ? 'selected' : '' }}>Other City</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OpenStreetMap Address Location Search -->
+                        <div class="relative">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Business Address / Location</label>
+                            <div class="input-group relative">
+                                <i class="fa-solid fa-map-pin input-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition"></i>
+                                <input type="text" id="location" name="location" value="{{ old('location') }}" required placeholder="Start typing address or market (e.g. Main Market, Gulberg)..." autocomplete="off" oninput="searchLocation(this.value)"
+                                       class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition font-medium">
+                            </div>
+                            <div id="locationSuggestions" class="hidden absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-slate-200 rounded-xl max-h-52 overflow-y-auto shadow-xl"></div>
+                        </div>
+
+                        <!-- Desired Web Access Subdomain -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Web Access Login URL (Subdomain)</label>
+                            <div class="flex items-stretch border border-slate-200 rounded-xl overflow-hidden bg-slate-50 focus-within:border-indigo-600 focus-within:ring-2 focus-within:ring-indigo-100 focus-within:bg-white transition">
+                                <span class="pl-3.5 flex items-center text-slate-400 text-xs"><i class="fa-solid fa-globe"></i></span>
+                                <input type="text" id="domain" name="domain" value="{{ old('domain') }}" required placeholder="your-store" oninput="cleanSlug()"
+                                       class="flex-1 px-3 py-2.5 bg-transparent border-none text-xs text-slate-900 outline-none font-medium">
+                                <span class="px-3.5 flex items-center bg-slate-100 border-l border-slate-200 text-xs font-semibold text-slate-500">
+                                    .yoursaas.com
+                                </span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">Store staff will log in at: <span class="font-mono text-indigo-600">your-store.yoursaas.com/login</span></p>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: Owner Account Credentials -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center">3</span>
+                            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Owner Account & Security</h3>
+                        </div>
+
+                        <!-- Name & Phone -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Owner Name</label>
+                                <div class="input-group relative">
+                                    <i class="fa-solid fa-user input-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition"></i>
+                                    <input type="text" id="owner_name" name="owner_name" value="{{ old('owner_name') }}" required placeholder="Ahmed Khan"
+                                           class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition font-medium">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+                                <div class="input-group relative">
+                                    <i class="fa-solid fa-phone input-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition"></i>
+                                    <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required placeholder="03XX-XXXXXXX"
+                                           class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition font-medium">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Owner Email -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+                            <div class="input-group relative">
+                                <i class="fa-solid fa-envelope input-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition"></i>
+                                <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="owner@mybusiness.com"
+                                       class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition font-medium">
+                            </div>
+                        </div>
+
+                        <!-- Password & Confirm Password -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+                                <div class="input-group relative">
+                                    <i class="fa-solid fa-lock input-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition"></i>
+                                    <input type="password" id="password" name="password" required minlength="8" placeholder="Min 8 characters"
+                                           class="w-full pl-9 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition font-medium">
+                                    <button type="button" onclick="togglePw('password',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Confirm Password</label>
+                                <div class="input-group relative">
+                                    <i class="fa-solid fa-lock input-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition"></i>
+                                    <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8" placeholder="Re-enter password"
+                                           class="w-full pl-9 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition font-medium">
+                                    <button type="button" onclick="togglePw('password_confirmation',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trial Plan Badge Banner -->
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-emerald-900">14-Day Free Trial Activated</p>
+                                    <p class="text-[11px] text-emerald-700">Full POS & management features unlocked immediately.</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-extrabold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md">FREE</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" class="w-full py-4 px-6 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-xl transition shadow-xs flex items-center justify-center gap-2 cursor-pointer">
+                        <span id="btnText">CREATE MY POS ACCOUNT</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                        <div id="btnSpinner" class="spinner hidden"></div>
+                    </button>
+                </form>
+
+                <p class="text-center text-[11px] text-slate-400 mt-4 pb-8">
+                    By registering, you agree to our Terms of Service & Privacy Policy.
+                </p>
             </div>
-            <input type="hidden" id="business_type" name="business_type" value="{{ old('business_type') }}">
 
-            <!-- Number of Outlets -->
-            <p class="section-label">Number of outlets maintained</p>
-            <div class="outlet-pills">
-                <div class="outlet-pill @if(old('outlets') == '1') active @endif" onclick="selectOutlet(this, '1')">1</div>
-                <div class="outlet-pill @if(old('outlets') == '2-5') active @endif" onclick="selectOutlet(this, '2-5')">2 – 5</div>
-                <div class="outlet-pill @if(old('outlets') == '6-10') active @endif" onclick="selectOutlet(this, '6-10')">6 – 10</div>
-                <div class="outlet-pill @if(old('outlets') == '10+') active @endif" onclick="selectOutlet(this, '10+')">10+</div>
-            </div>
-            <input type="hidden" id="outlets" name="outlets" value="{{ old('outlets') }}">
-
-            <!-- Details Form -->
-            <div class="form-card">
-
-                <!-- Row 1: Name + Phone -->
-                <div class="row-2">
-                    <div class="field">
-                        <label for="owner_name">Your Name</label>
-                        <input type="text" id="owner_name" name="owner_name" value="{{ old('owner_name') }}" required placeholder="Ahmed Khan">
-                    </div>
-                    <div class="field">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required placeholder="03XX-XXXXXXX">
-                    </div>
-                </div>
-
-                <!-- Row 2: Business Name + City -->
-                <div class="row-2">
-                    <div class="field">
-                        <label for="business_name">Shop / Business Name</label>
-                        <input type="text" id="business_name" name="business_name" value="{{ old('business_name') }}" required placeholder="My Super Mart" oninput="autoSlug()">
-                    </div>
-                    <div class="field">
-                        <label for="city">City</label>
-                        <select id="city" name="city" required style="width:100%;padding:0.6875rem 0.875rem;border:1.5px solid #e2e8f0;border-radius:0.625rem;font-size:0.875rem;outline:none;background:#f8fafc;color:#334155;cursor:pointer;">
-                            <option value="" disabled {{ old('city') ? '' : 'selected' }}>Select your city</option>
-                            <option value="Karachi" {{ old('city') == 'Karachi' ? 'selected' : '' }}>Karachi</option>
-                            <option value="Lahore" {{ old('city') == 'Lahore' ? 'selected' : '' }}>Lahore</option>
-                            <option value="Faisalabad" {{ old('city') == 'Faisalabad' ? 'selected' : '' }}>Faisalabad</option>
-                            <option value="Rawalpindi" {{ old('city') == 'Rawalpindi' ? 'selected' : '' }}>Rawalpindi</option>
-                            <option value="Gujranwala" {{ old('city') == 'Gujranwala' ? 'selected' : '' }}>Gujranwala</option>
-                            <option value="Peshawar" {{ old('city') == 'Peshawar' ? 'selected' : '' }}>Peshawar</option>
-                            <option value="Multan" {{ old('city') == 'Multan' ? 'selected' : '' }}>Multan</option>
-                            <option value="Hyderabad" {{ old('city') == 'Hyderabad' ? 'selected' : '' }}>Hyderabad</option>
-                            <option value="Islamabad" {{ old('city') == 'Islamabad' ? 'selected' : '' }}>Islamabad</option>
-                            <option value="Quetta" {{ old('city') == 'Quetta' ? 'selected' : '' }}>Quetta</option>
-                            <option value="Bahawalpur" {{ old('city') == 'Bahawalpur' ? 'selected' : '' }}>Bahawalpur</option>
-                            <option value="Sargodha" {{ old('city') == 'Sargodha' ? 'selected' : '' }}>Sargodha</option>
-                            <option value="Sialkot" {{ old('city') == 'Sialkot' ? 'selected' : '' }}>Sialkot</option>
-                            <option value="Sukkur" {{ old('city') == 'Sukkur' ? 'selected' : '' }}>Sukkur</option>
-                            <option value="Larkana" {{ old('city') == 'Larkana' ? 'selected' : '' }}>Larkana</option>
-                            <option value="Sheikhupura" {{ old('city') == 'Sheikhupura' ? 'selected' : '' }}>Sheikhupura</option>
-                            <option value="Rahim Yar Khan" {{ old('city') == 'Rahim Yar Khan' ? 'selected' : '' }}>Rahim Yar Khan</option>
-                            <option value="Jhang" {{ old('city') == 'Jhang' ? 'selected' : '' }}>Jhang</option>
-                            <option value="Dera Ghazi Khan" {{ old('city') == 'Dera Ghazi Khan' ? 'selected' : '' }}>Dera Ghazi Khan</option>
-                            <option value="Gujrat" {{ old('city') == 'Gujrat' ? 'selected' : '' }}>Gujrat</option>
-                            <option value="Sahiwal" {{ old('city') == 'Sahiwal' ? 'selected' : '' }}>Sahiwal</option>
-                            <option value="Wah Cantonment" {{ old('city') == 'Wah Cantonment' ? 'selected' : '' }}>Wah Cantonment</option>
-                            <option value="Mardan" {{ old('city') == 'Mardan' ? 'selected' : '' }}>Mardan</option>
-                            <option value="Kasur" {{ old('city') == 'Kasur' ? 'selected' : '' }}>Kasur</option>
-                            <option value="Okara" {{ old('city') == 'Okara' ? 'selected' : '' }}>Okara</option>
-                            <option value="Mingora" {{ old('city') == 'Mingora' ? 'selected' : '' }}>Mingora</option>
-                            <option value="Nawabshah" {{ old('city') == 'Nawabshah' ? 'selected' : '' }}>Nawabshah</option>
-                            <option value="Chiniot" {{ old('city') == 'Chiniot' ? 'selected' : '' }}>Chiniot</option>
-                            <option value="Kamoke" {{ old('city') == 'Kamoke' ? 'selected' : '' }}>Kamoke</option>
-                            <option value="Hafizabad" {{ old('city') == 'Hafizabad' ? 'selected' : '' }}>Hafizabad</option>
-                            <option value="Sadiqabad" {{ old('city') == 'Sadiqabad' ? 'selected' : '' }}>Sadiqabad</option>
-                            <option value="Mirpur Khas" {{ old('city') == 'Mirpur Khas' ? 'selected' : '' }}>Mirpur Khas</option>
-                            <option value="Burewala" {{ old('city') == 'Burewala' ? 'selected' : '' }}>Burewala</option>
-                            <option value="Kohat" {{ old('city') == 'Kohat' ? 'selected' : '' }}>Kohat</option>
-                            <option value="Muzaffargarh" {{ old('city') == 'Muzaffargarh' ? 'selected' : '' }}>Muzaffargarh</option>
-                            <option value="Khanewal" {{ old('city') == 'Khanewal' ? 'selected' : '' }}>Khanewal</option>
-                            <option value="Dera Ismail Khan" {{ old('city') == 'Dera Ismail Khan' ? 'selected' : '' }}>Dera Ismail Khan</option>
-                            <option value="Turbat" {{ old('city') == 'Turbat' ? 'selected' : '' }}>Turbat</option>
-                            <option value="Muzaffarabad" {{ old('city') == 'Muzaffarabad' ? 'selected' : '' }}>Muzaffarabad</option>
-                            <option value="Abbottabad" {{ old('city') == 'Abbottabad' ? 'selected' : '' }}>Abbottabad</option>
-                            <option value="Mandi Bahauddin" {{ old('city') == 'Mandi Bahauddin' ? 'selected' : '' }}>Mandi Bahauddin</option>
-                            <option value="Shikarpur" {{ old('city') == 'Shikarpur' ? 'selected' : '' }}>Shikarpur</option>
-                            <option value="Jacobabad" {{ old('city') == 'Jacobabad' ? 'selected' : '' }}>Jacobabad</option>
-                            <option value="Jhelum" {{ old('city') == 'Jhelum' ? 'selected' : '' }}>Jhelum</option>
-                            <option value="Khanpur" {{ old('city') == 'Khanpur' ? 'selected' : '' }}>Khanpur</option>
-                            <option value="Khairpur" {{ old('city') == 'Khairpur' ? 'selected' : '' }}>Khairpur</option>
-                            <option value="Khuzdar" {{ old('city') == 'Khuzdar' ? 'selected' : '' }}>Khuzdar</option>
-                            <option value="Pakpattan" {{ old('city') == 'Pakpattan' ? 'selected' : '' }}>Pakpattan</option>
-                            <option value="Hub" {{ old('city') == 'Hub' ? 'selected' : '' }}>Hub</option>
-                            <option value="Chaman" {{ old('city') == 'Chaman' ? 'selected' : '' }}>Chaman</option>
-                            <option value="Swabi" {{ old('city') == 'Swabi' ? 'selected' : '' }}>Swabi</option>
-                            <option value="Daska" {{ old('city') == 'Daska' ? 'selected' : '' }}>Daska</option>
-                            <option value="Haripur" {{ old('city') == 'Haripur' ? 'selected' : '' }}>Haripur</option>
-                            <option value="Taxila" {{ old('city') == 'Taxila' ? 'selected' : '' }}>Taxila</option>
-                            <option value="Gojra" {{ old('city') == 'Gojra' ? 'selected' : '' }}>Gojra</option>
-                            <option value="Gilgit" {{ old('city') == 'Gilgit' ? 'selected' : '' }}>Gilgit</option>
-                            <option value="Skardu" {{ old('city') == 'Skardu' ? 'selected' : '' }}>Skardu</option>
-                            <option value="Mirpur (AJK)" {{ old('city') == 'Mirpur (AJK)' ? 'selected' : '' }}>Mirpur (AJK)</option>
-                            <option value="Other" {{ old('city') == 'Other' ? 'selected' : '' }}>Other City</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Row 3: Location (OpenStreetMap Nominatim Auto-Suggest) -->
-                <div class="field" style="position:relative;">
-                    <label for="location">Business Location / Address</label>
-                    <input type="text" id="location" name="location" value="{{ old('location') }}" required placeholder="Type street / market (e.g. Main Market, Gulberg III)..." autocomplete="off" oninput="searchLocation(this.value)">
-                    <div id="locationSuggestions" style="display:none; position:absolute; left:0; right:0; top:100%; z-index:99; background:#fff; border:1px solid #cbd5e1; border-radius:0.625rem; max-height:220px; overflow-y:auto; box-shadow:0 10px 25px -5px rgba(0,0,0,0.12); margin-top:0.25rem;"></div>
-                </div>
-
-                <!-- Row 4: Web Access URL -->
-                <div class="field">
-                    <label>Web Access URL</label>
-                    <div class="url-field">
-                        <input type="text" id="domain" name="domain" value="{{ old('domain') }}" required placeholder="your-business" oninput="cleanSlug()">
-                        <div class="url-suffix">.yoursaas.com</div>
-                    </div>
-                    <p style="font-size:0.6875rem;color:#94a3b8;margin-top:0.25rem;">Only lowercase letters, numbers, and hyphens</p>
-                </div>
-
-                <!-- Row 5: Email -->
-                <div class="field">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="you@example.com">
-                </div>
-
-                <!-- Row 6: Password -->
-                <div class="row-2">
-                    <div class="field">
-                        <label for="password">Password</label>
-                        <div class="field-pw">
-                            <input type="password" id="password" name="password" required minlength="8" placeholder="Min 8 characters">
-                            <button type="button" onclick="togglePw('password',this)" class="toggle-pw"><i class="fa-solid fa-eye" style="font-size:0.8125rem;"></i></button>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label for="password_confirmation">Confirm Password</label>
-                        <div class="field-pw">
-                            <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8" placeholder="Re-enter password">
-                            <button type="button" onclick="togglePw('password_confirmation',this)" class="toggle-pw"><i class="fa-solid fa-eye" style="font-size:0.8125rem;"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Plan Type (Static Free Trial) -->
-                <div class="field" style="margin-bottom:1.5rem;">
-                    <label>Plan Type</label>
-                    <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:0.75rem;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;">
-                        <div style="width:2.5rem;height:2.5rem;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                            <i class="fa-solid fa-check" style="color:#fff;font-size:0.875rem;"></i>
-                        </div>
-                        <div style="flex:1;">
-                            <div style="font-size:0.9375rem;font-weight:700;color:#166534;">Free 14-Day Trial</div>
-                            <div style="font-size:0.75rem;color:#4ade80;margin-top:0.125rem;">Full access to all features. No credit card needed.</div>
-                        </div>
-                        <div style="text-align:right;">
-                            <div style="font-size:1.25rem;font-weight:800;color:#166534;">Free</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Submit -->
-                <button type="submit" id="submitBtn" class="btn-submit">
-                    <span id="btnText">REGISTER</span>
-                    <div id="btnSpinner" class="spinner" style="display:none;"></div>
-                </button>
-            </div>
-        </form>
-
-        <!-- Testimonials -->
-        <div class="testimonials">
-            <h3>Trusted by 500+ businesses</h3>
-            <div class="testi-grid">
-                <div class="testi-card">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="User">
-                    <div class="testi-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <div class="testi-name">Bilal Ahmed</div>
-                    <div class="testi-role">Owner, SuperMart</div>
-                    <div class="testi-text">"Switched from manual billing. My staff learned it in 10 minutes. Best decision ever."</div>
-                </div>
-                <div class="testi-card">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="User">
-                    <div class="testi-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <div class="testi-name">Sara Malik</div>
-                    <div class="testi-role">Manager, Spice Kitchen</div>
-                    <div class="testi-text">"KOT system and table management changed our restaurant operations completely."</div>
-                </div>
-                <div class="testi-card">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="User">
-                    <div class="testi-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <div class="testi-name">Usman Raza</div>
-                    <div class="testi-role">Owner, Brew & Bean</div>
-                    <div class="testi-text">"Tried 3 POS systems before. This one actually works. Fast, simple, reliable."</div>
-                </div>
-            </div>
         </div>
 
-        <p class="footer-text">
-            By registering you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-        </p>
     </div>
 
+    <!-- JS Logic Scripts -->
     <script>
-        // Business type selection
         function selectBiz(el, value) {
             document.querySelectorAll('.biz-card').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
             document.getElementById('business_type').value = value;
         }
 
-        // Outlet selection
         function selectOutlet(el, value) {
             document.querySelectorAll('.outlet-pill').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
             document.getElementById('outlets').value = value;
         }
 
-        // Plan selection
-        function selectPlan(el, value) {
-            document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById('plan_id').value = value;
-        }
-
-        // Auto slug from business name
         function autoSlug() {
             const name = document.getElementById('business_name').value;
             const slug = name.toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
             document.getElementById('domain').value = slug;
         }
 
-        // Clean slug manually
         function cleanSlug() {
             const f = document.getElementById('domain');
             f.value = f.value.toLowerCase().replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'');
         }
 
-        // Toggle password
         function togglePw(id, btn) {
             const f = document.getElementById(id);
             const i = btn.querySelector('i');
@@ -436,13 +505,13 @@
             else { f.type = 'password'; i.className = 'fa-solid fa-eye'; }
         }
 
-        // ── OpenStreetMap (Nominatim API) Location Search ──
+        // OpenStreetMap Nominatim Live Autocomplete
         let locationTimeout = null;
         function searchLocation(query) {
             clearTimeout(locationTimeout);
             const box = document.getElementById('locationSuggestions');
             if (!query || query.trim().length < 3) {
-                box.style.display = 'none';
+                box.classList.add('hidden');
                 return;
             }
 
@@ -456,30 +525,22 @@
                     .then(data => {
                         box.innerHTML = '';
                         if (!data || data.length === 0) {
-                            box.style.display = 'none';
+                            box.classList.add('hidden');
                             return;
                         }
                         data.forEach(item => {
                             const div = document.createElement('div');
-                            div.style.cssText = 'padding:0.625rem 0.875rem; border-bottom:1px solid #f1f5f9; cursor:pointer; font-size:0.8125rem; color:#334155; display:flex; align-items:center; gap:0.5rem; transition:background 0.15s;';
-                            div.innerHTML = `<i class="fa-solid fa-location-dot" style="color:#2563eb; flex-shrink:0;"></i> <span>${item.display_name}</span>`;
+                            div.className = 'px-3.5 py-2.5 border-b border-slate-100 text-xs text-slate-700 cursor-pointer flex items-center gap-2 hover:bg-slate-50 transition';
+                            div.innerHTML = `<i class="fa-solid fa-location-dot text-indigo-600 shrink-0"></i> <span>${item.display_name}</span>`;
                             
-                            div.onmouseover = () => div.style.background = '#f8fafc';
-                            div.onmouseout = () => div.style.background = '#fff';
                             div.onclick = () => {
                                 document.getElementById('location').value = item.display_name;
-                                box.style.display = 'none';
+                                box.classList.add('hidden');
 
-                                // ── Bulletproof City Auto-Selection Algorithm ──
                                 const citySelect = document.getElementById('city');
                                 let matched = false;
-
-                                // 1. Direct address fields check
                                 const addr = item.address || {};
-                                const possibleNames = [
-                                    addr.city, addr.town, addr.village, addr.municipality,
-                                    addr.county, addr.state_district, addr.suburb
-                                ].filter(Boolean);
+                                const possibleNames = [addr.city, addr.town, addr.village, addr.municipality, addr.county, addr.state_district, addr.suburb].filter(Boolean);
 
                                 for (let name of possibleNames) {
                                     const cleanName = String(name).toLowerCase();
@@ -493,7 +554,6 @@
                                     if (matched) break;
                                 }
 
-                                // 2. Fallback: Search dropdown city options inside full display_name
                                 if (!matched && item.display_name) {
                                     const fullText = item.display_name.toLowerCase();
                                     for (let opt of citySelect.options) {
@@ -506,32 +566,28 @@
                             };
                             box.appendChild(div);
                         });
-                        box.style.display = 'block';
+                        box.classList.remove('hidden');
                     })
-                    .catch(() => { box.style.display = 'none'; });
+                    .catch(() => { box.classList.add('hidden'); });
             }, 300);
         }
 
-        // Hide location dropdown when clicking outside
         document.addEventListener('click', function(e) {
             const box = document.getElementById('locationSuggestions');
             const input = document.getElementById('location');
             if (box && e.target !== input && !box.contains(e.target)) {
-                box.style.display = 'none';
+                box.classList.add('hidden');
             }
         });
 
-        // Submit loading + validation
         document.getElementById('trialForm').addEventListener('submit', function(e) {
-            // Honeypot check
             if (document.querySelector('input[name="website"]').value) {
                 e.preventDefault();
                 return;
             }
-            // Required field checks
             if (!document.getElementById('business_type').value) {
                 e.preventDefault();
-                alert('Please select your business type.');
+                alert('Please select your business industry.');
                 return;
             }
             if (!document.getElementById('outlets').value) {
@@ -542,10 +598,9 @@
 
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
-            document.getElementById('btnText').textContent = 'CREATING YOUR ACCOUNT...';
-            document.getElementById('btnSpinner').style.display = 'block';
+            document.getElementById('btnText').textContent = 'CREATING MY ACCOUNT...';
+            document.getElementById('btnSpinner').classList.remove('hidden');
         });
     </script>
-
 </body>
 </html>

@@ -182,6 +182,10 @@ Route::middleware(['auth', 'tenant.identifier', 'active.user', 'email.verified',
     // Activity Logs
     Route::get('/activity-logs', [App\Http\Controllers\Tenant\ActivityLogController::class, 'index'])->name('tenant.activity-logs');
 
+    // ── Reports Routes ──
+    Route::get('/reports/sales', [App\Http\Controllers\Tenant\ReportController::class, 'salesReport'])->name('tenant.reports.sales');
+    Route::get('/reports/revenue', [App\Http\Controllers\Tenant\ReportController::class, 'revenueReport'])->name('tenant.reports.revenue');
+
     // Tenant Change Password
     Route::get('/change-password', [ProfileController::class, 'showChangePassword'])->name('password.change');
     Route::put('/change-password', [ProfileController::class, 'changePassword'])->name('password.update.tenant');

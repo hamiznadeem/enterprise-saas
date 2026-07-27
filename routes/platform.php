@@ -12,6 +12,7 @@ use App\Http\Controllers\Platform\InvoiceController;
 use App\Http\Controllers\Platform\SettingController;
 use App\Http\Controllers\Platform\AuditLogController;
 use App\Http\Controllers\Platform\RoleController;
+use App\Http\Controllers\Platform\ReportController as PlatformReportController;
 
 // ── Public Auth Routes ──
 Route::prefix('super-admin')->middleware('web')->group(function () {
@@ -100,6 +101,12 @@ Route::prefix('super-admin')->middleware(['web', 'platform.auth'])->group(functi
     Route::get('/audit-logs', [AuditLogController::class, 'index'])
         ->middleware('permission:audit-logs.view')
         ->name('platform.audit-logs.index');
+
+    // Platform Reports
+    Route::get('/reports/sales', [PlatformReportController::class, 'sales'])
+        ->name('platform.reports.sales');
+    Route::get('/reports/revenue', [PlatformReportController::class, 'revenue'])
+        ->name('platform.reports.revenue');
 
     // Roles & Permissions — Super admin only
     Route::get('/roles', [RoleController::class, 'index'])

@@ -3,7 +3,7 @@
     $admin = auth('platform')->user();
     
     function isPlatformActive($routeName, $activeRoute) {
-        return strpos($activeRoute, $routeName) === 0 ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white';
+        return strpos($activeRoute, $routeName) === 0 ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:bg-slate-800 hover:text-white';
     }
 @endphp
 
@@ -74,14 +74,14 @@
         <div class="pt-4 mt-4 border-t border-gray-800">
             <p class="px-2.5 lg:group-hover/sidebar:px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 opacity-0 lg:group-hover/sidebar:opacity-100 transition-opacity duration-200 delay-75 whitespace-nowrap">Reports</p>
             
-            <a href="#" title="Revenue Report"
-               class="flex items-center rounded-lg text-sm font-medium transition text-gray-400 hover:bg-gray-700 hover:text-white px-2.5 py-2.5 lg:group-hover/sidebar:px-3">
+            <a href="{{ route('platform.reports.revenue') }}" title="Revenue Report"
+               class="flex items-center rounded-lg text-sm font-medium transition {{ isPlatformActive('platform.reports.revenue', $activeRoute) }} px-2.5 py-2.5 lg:group-hover/sidebar:px-3">
                 <i class="fa-solid fa-chart-line w-5 text-center shrink-0"></i>
                 <span class="ml-3 whitespace-nowrap opacity-0 lg:group-hover/sidebar:opacity-100 transition-opacity duration-200 delay-75">Revenue Report</span>
             </a>
             
-            <a href="#" title="Sales Report"
-               class="flex items-center rounded-lg text-sm font-medium transition text-gray-400 hover:bg-gray-700 hover:text-white px-2.5 py-2.5 lg:group-hover/sidebar:px-3">
+            <a href="{{ route('platform.reports.sales') }}" title="Sales Report"
+               class="flex items-center rounded-lg text-sm font-medium transition {{ isPlatformActive('platform.reports.sales', $activeRoute) }} px-2.5 py-2.5 lg:group-hover/sidebar:px-3">
                 <i class="fa-solid fa-chart-pie w-5 text-center shrink-0"></i>
                 <span class="ml-3 whitespace-nowrap opacity-0 lg:group-hover/sidebar:opacity-100 transition-opacity duration-200 delay-75">Sales Report</span>
             </a>
