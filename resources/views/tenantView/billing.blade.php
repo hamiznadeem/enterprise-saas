@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Subscription Expired — SwiftPOS</title>
+    <title>
+        @if($tenant->status === 'trial')
+            Free Trial Active — Enterprise POS
+        @elseif($tenant->status === 'active')
+            Subscription Active — Enterprise POS
+        @else
+            Subscription Expired — Enterprise POS
+        @endif
+    </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,184 +24,184 @@
     </script>
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in { animation: fadeInUp 0.5s ease-out; }
-        .fade-in-delay { animation: fadeInUp 0.5s ease-out 0.15s both; }
-        .fade-in-delay-2 { animation: fadeInUp 0.5s ease-out 0.3s both; }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .float { animation: float 4s ease-in-out infinite; }
-
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 1; }
-            100% { transform: scale(1.8); opacity: 0; }
-        }
-        .pulse-ring::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            border: 2px solid rgba(239, 68, 68, 0.4);
-            animation: pulse-ring 2s ease-out infinite;
-        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between p-4 md:p-8">
 
-    <div class="w-full max-w-md fade-in">
+    @php
+        $daysLeft = 0;
+        if ($tenant->status === 'trial' && $tenant->trial_ends_at) {
+            $daysLeft = max(0, (int) now()->diffInDays($tenant->trial_ends_at, false));
+        } elseif ($tenant->status === 'active' && $tenant->will_expire_at) {
+            $daysLeft = max(0, (int) now()->diffInDays($tenant->will_expire_at, false));
+        }
+    @endphp
 
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <a href="/" class="inline-flex items-center gap-2">
-                <div class="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-bolt text-white text-sm"></i>
-                </div>
-                <span class="text-xl font-extrabold text-gray-900 tracking-tight">SwiftPOS</span>
-            </a>
+    <!-- Top Navigation Header -->
+    <header class="max-w-5xl w-full mx-auto flex items-center justify-between py-2 border-b border-slate-200">
+        <a href="/" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                <i class="fa-solid fa-bolt text-xs"></i>
+            </div>
+            <span class="text-lg font-bold text-slate-900 tracking-tight">Enterprise POS</span>
+        </a>
+
+        <div class="flex items-center gap-3">
+            @if($tenant->status === 'trial' || $tenant->status === 'active')
+                <a href="{{ route('tenant.dashboard') }}" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition shadow-sm">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                    <span>Dashboard</span>
+                </a>
+            @endif
+
+            <form method="POST" action="{{ route('tenant.auth.logout') }}" class="inline">
+                @csrf
+                <button type="submit" class="text-xs text-slate-500 hover:text-red-600 font-medium transition flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 border border-slate-200">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </div>
+    </header>
 
-        <!-- Card -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <!-- Main Viewport Section -->
+    <main class="max-w-5xl w-full mx-auto my-auto py-6">
 
-            <!-- Header -->
-            <div class="bg-gradient-to-br from-red-500 via-red-500 to-red-600 px-6 py-10 text-center relative overflow-hidden">
-                <!-- Background decoration -->
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-                
-                <div class="relative">
-                    <div class="float inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-4 relative pulse-ring">
-                        <i class="fa-solid fa-clock text-white text-2xl"></i>
+        {{-- Flash Notification Banners --}}
+        @if(session('error'))
+        <div class="mb-4 bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-3">
+            <i class="fa-solid fa-circle-exclamation text-red-600 text-sm"></i>
+            <p class="text-xs text-red-800 font-medium">{{ session('error') }}</p>
+        </div>
+        @endif
+
+        @if(session('warning'))
+        <div class="mb-4 bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm"></i>
+            <p class="text-xs text-amber-800 font-medium">{{ session('warning') }}</p>
+        </div>
+        @endif
+
+        <!-- 2-Column Responsive Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            
+            <!-- Left Banner: Status & Overview -->
+            <div class="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-6 md:p-8 flex flex-col justify-between shadow-sm">
+                <div>
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-4
+                        @if($tenant->status === 'trial') bg-blue-50 text-blue-700 border border-blue-200
+                        @elseif($tenant->status === 'active') bg-emerald-50 text-emerald-700 border border-emerald-200
+                        @else bg-red-50 text-red-700 border border-red-200 @endif">
+                        <span class="w-2 h-2 rounded-full @if($tenant->status === 'trial') bg-blue-600 @elseif($tenant->status === 'active') bg-emerald-600 @else bg-red-600 @endif"></span>
+                        @if($tenant->status === 'trial') Free Trial Mode @elseif($tenant->status === 'active') Active Subscription @else Plan Expired @endif
                     </div>
-                    <h1 class="text-white text-xl font-extrabold">Subscription Expired</h1>
-                    <p class="text-red-100 text-sm mt-1">Your current plan has ended</p>
+
+                    <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+                        @if($tenant->status === 'trial')
+                            Your 14-Day Free Trial is Active
+                        @elseif($tenant->status === 'active')
+                            Your Subscription is Active
+                        @else
+                            Your Subscription Has Expired
+                        @endif
+                    </h1>
+
+                    <p class="text-xs md:text-sm text-slate-600 mt-2 leading-relaxed">
+                        @if($tenant->status === 'trial')
+                            You have <strong class="text-slate-900 font-semibold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">{{ $daysLeft }} Days</strong> remaining in your trial. All POS features are unlocked.
+                        @elseif($tenant->status === 'active')
+                            Your store account is fully active. Next billing renewal date is <strong class="text-slate-900 font-semibold">{{ $tenant->will_expire_at ? $tenant->will_expire_at->format('M j, Y') : 'N/A' }}</strong>.
+                        @else
+                            Your plan ended on <strong class="text-slate-900 font-semibold">{{ $tenant->will_expire_at ? $tenant->will_expire_at->format('M j, Y') : ($tenant->trial_ends_at ? $tenant->trial_ends_at->format('M j, Y') : 'N/A') }}</strong>. Access is paused until renewal. Your store data is completely safe.
+                        @endif
+                    </p>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+                    <div>
+                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Business Name</p>
+                        <p class="text-sm font-bold text-slate-900 truncate max-w-[200px]">{{ $tenant->name }}</p>
+                    </div>
+
+                    @if($tenant->status === 'trial' || $tenant->status === 'active')
+                        <a href="{{ route('tenant.dashboard') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg transition shadow-sm">
+                            <span>Open POS Dashboard</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    @endif
                 </div>
             </div>
 
-            <!-- Content -->
-            <div class="p-6">
+            <!-- Right Column: Account Details & Actions -->
+            <div class="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm">
+                
+                <div>
+                    <h2 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-id-card text-blue-600"></i> Account & Plan Summary
+                    </h2>
 
-                {{-- Flash Message --}}
-                @if(session('error'))
-                <div class="fade-in mb-5 bg-red-50 border border-red-200 rounded-xl p-3.5 flex items-start gap-3">
-                    <i class="fa-solid fa-circle-exclamation text-red-500 mt-0.5"></i>
-                    <p class="text-sm text-red-700">{{ session('error') }}</p>
-                </div>
-                @endif
+                    <!-- Specs Grid -->
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Owner Name</p>
+                            <p class="text-xs font-semibold text-slate-800 mt-1 truncate">{{ $tenant->owner_name }}</p>
+                        </div>
 
-                {{-- Tenant Info Card --}}
-                <div class="fade-in-delay bg-gray-50 rounded-xl p-4 mb-5 border border-gray-100">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <i class="fa-solid fa-building text-blue-600 text-sm"></i>
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Subdomain URL</p>
+                            <p class="text-xs font-semibold text-blue-600 mt-1 truncate">{{ $tenant->domain }}</p>
                         </div>
-                        <div>
-                            <p class="font-bold text-gray-900 text-sm">{{ $tenant->name }}</p>
-                            <p class="text-[11px] text-gray-400">{{ $tenant->owner_name }} · {{ $tenant->owner_email }}</p>
+
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Current Plan</p>
+                            <p class="text-xs font-semibold text-slate-800 mt-1">{{ $tenant->plan->name ?? 'Free Trial' }}</p>
                         </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-white rounded-lg p-2.5 border border-gray-100">
-                            <p class="text-[10px] text-gray-400 uppercase font-semibold tracking-wider">Status</p>
-                            <span class="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-700 text-[11px] font-bold rounded-full">
-                                {{ ucfirst($tenant->status) }}
-                            </span>
-                        </div>
-                        <div class="bg-white rounded-lg p-2.5 border border-gray-100">
-                            <p class="text-[10px] text-gray-400 uppercase font-semibold tracking-wider">Expired</p>
-                            <p class="mt-1 text-xs font-bold text-gray-900">
-                                {{ $tenant->will_expire_at ? $tenant->will_expire_at->format('M j, Y') : ($tenant->trial_ends_at ? $tenant->trial_ends_at->format('M j, Y') : 'N/A') }}
+
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Expiry Date</p>
+                            <p class="text-xs font-semibold text-slate-900 mt-1">
+                                @if($tenant->status === 'trial' && $tenant->trial_ends_at)
+                                    {{ $tenant->trial_ends_at->format('M j, Y') }}
+                                @elseif($tenant->will_expire_at)
+                                    {{ $tenant->will_expire_at->format('M j, Y') }}
+                                @else
+                                    N/A
+                                @endif
                             </p>
                         </div>
-                        @if($tenant->plan)
-                        <div class="bg-white rounded-lg p-2.5 border border-gray-100">
-                            <p class="text-[10px] text-gray-400 uppercase font-semibold tracking-wider">Plan</p>
-                            <p class="mt-1 text-xs font-bold text-gray-900">{{ $tenant->plan->name }}</p>
-                        </div>
-                        <div class="bg-white rounded-lg p-2.5 border border-gray-100">
-                            <p class="text-[10px] text-gray-400 uppercase font-semibold tracking-wider">Cycle</p>
-                            <p class="mt-1 text-xs font-bold text-gray-900 capitalize">{{ $tenant->plan->billing_cycle }}</p>
-                        </div>
-                        @endif
                     </div>
                 </div>
 
-                {{-- Warning --}}
-                <div class="fade-in-delay-2 bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-                    <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-amber-800">What happens now?</p>
-                            <ul class="text-xs text-amber-700 mt-1.5 space-y-1 leading-relaxed">
-                                <li class="flex items-start gap-1.5">
-                                    <i class="fa-solid fa-check text-amber-500 mt-0.5 text-[9px]"></i>
-                                    Your data is completely safe and backed up
-                                </li>
-                                <li class="flex items-start gap-1.5">
-                                    <i class="fa-solid fa-check text-amber-500 mt-0.5 text-[9px]"></i>
-                                    Dashboard access is paused until renewal
-                                </li>
-                                <li class="flex items-start gap-1.5">
-                                    <i class="fa-solid fa-check text-amber-500 mt-0.5 text-[9px]"></i>
-                                    Reactivation is instant after payment
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <!-- Contact & Support Action Buttons -->
+                <div>
+                    <p class="text-xs font-medium text-slate-600 mb-2">Need help or want to upgrade?</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <a href="https://wa.me/923001234567?text={{ urlencode("Hi,\nI would like to upgrade / renew my subscription.\n\nBusiness Name: " . $tenant->name . "\nDomain: " . $tenant->domain . "\nOwner: " . $tenant->owner_name) }}" 
+                           target="_blank"
+                           class="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg transition shadow-sm">
+                            <i class="fa-brands fa-whatsapp text-base"></i>
+                            <span>WhatsApp Sales</span>
+                        </a>
 
-                {{-- Action Buttons --}}
-                <div class="fade-in-delay-2 space-y-2.5">
-                    <a href="https://wa.me/923001234567?text={{ urlencode("Hi,\nMy SwiftPOS subscription has expired.\n\nBusiness: " . $tenant->name . "\nOwner: " . $tenant->owner_name . "\nEmail: " . $tenant->owner_email . "\n\nI would like to renew it.") }}" 
-                       target="_blank"
-                       class="w-full flex items-center justify-center gap-2.5 px-5 py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl text-sm transition shadow-sm shadow-green-500/20 hover:shadow-green-500/30">
-                        <i class="fa-brands fa-whatsapp text-lg"></i>
-                        Chat on WhatsApp
-                    </a>
-
-                    <div class="grid grid-cols-2 gap-2.5">
                         <a href="tel:+923001234567" 
-                           class="flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-semibold rounded-xl text-sm transition">
-                            <i class="fa-solid fa-phone text-xs"></i>
-                            <span class="text-xs">Call Us</span>
-                        </a>
-                        <a href="mailto:support@swiftpos.com?subject=Subscription Renewal — {{ $tenant->name }}&body={{ urlencode("Hi,\nMy subscription has expired.\nBusiness: " . $tenant->name . "\nPlease help me renew it.") }}" 
-                           class="flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-semibold rounded-xl text-sm transition">
-                            <i class="fa-solid fa-envelope text-xs"></i>
-                            <span class="text-xs">Email Us</span>
+                           class="flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition border border-slate-200">
+                            <i class="fa-solid fa-phone text-blue-600"></i>
+                            <span>Call Support</span>
                         </a>
                     </div>
-                </div>
-
-                {{-- Logout --}}
-                <div class="mt-5 pt-5 border-t border-gray-100 text-center">
-                    <form method="POST" action="{{ route('tenant.auth.logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="text-xs text-gray-400 hover:text-red-500 font-medium transition inline-flex items-center gap-1.5 group">
-                            <i class="fa-solid fa-right-from-bracket group-hover:translate-x-0.5 transition-transform"></i>
-                            Sign out
-                        </button>
-                    </form>
                 </div>
 
             </div>
+
         </div>
 
-        <p class="text-center text-xs text-gray-400 mt-5">
-            <i class="fa-solid fa-shield-halved mr-1"></i>
-            Your data is safe. Account reactivates instantly after payment.
-        </p>
+    </main>
 
-    </div>
+    <!-- Footer -->
+    <footer class="max-w-5xl w-full mx-auto text-center py-2 text-[11px] text-slate-400 border-t border-slate-200">
+        <i class="fa-solid fa-shield-halved text-emerald-600 mr-1"></i> 100% Safe & Encrypted Enterprise Platform
+    </footer>
 
 </body>
 </html>

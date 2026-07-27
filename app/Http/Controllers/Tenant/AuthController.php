@@ -94,15 +94,15 @@ class AuthController extends Controller
             ]);
         }
 
-       // Step 6: Success
+        // Step 6: Success
         $user = Auth::user();
 
-        // Check email verification (NO sendEmailVerificationNotification here)
-        if (!$user->hasVerifiedEmail()) {
-            Auth::logout();
-            $request->session()->invalidate();
+        // Check email verification ONLY for active/renewed accounts (Free trial users bypass)
+        $isTrial = $tenant->status === 'trial' || $tenant->on_trial || ($tenant->trial_ends_at && $tenant->trial_ends_at->isFuture());
+
+        if (!$isTrial && !$user->hasVerifiedEmail()) {
             return redirect()->route('tenant.verification.notice')
-                ->with('status', 'Please verify your email first. A new link has been sent.');
+                ->with('status', 'Please verify your email first to access your active subscription.');
         }
 
         AccountLockService::resetAttempts($user);

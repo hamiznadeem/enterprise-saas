@@ -51,35 +51,39 @@ Route::get('/tenant/dashboard', function () {
     }
     
     $user = Auth::user();
+    $tenant = \App\Models\Tenant::find($user->tenant_id);
 
-    // Email verification check
-    if (!$user->hasVerifiedEmail()) {
-        return redirect()->route('tenant.verification.notice')
-            ->with('status', 'Please verify your email first.');
+    if (!$tenant) {
+        Auth::logout();
+        return redirect()->route('tenantView.login')->withErrors(['email' => 'Invalid tenant account.']);
     }
 
-    // 2FA check
+    // 1. 2FA check
     if ($user->two_factor_enabled && !session('two_factor_verified')) {
         return redirect()->route('two-factor.challenge');
     }
 
-    $tenant = \App\Models\Tenant::find($user->tenant_id);
-
-    // Already expired
+    // 2. Already expired
     if ($tenant->status === 'expired') {
         return redirect()->route('tenant.billing');
     }
     
-    // Trial expired — auto mark
+    // 3. Trial expired — auto mark
     if ($tenant->status === 'trial' && $tenant->trial_ends_at && $tenant->trial_ends_at->isPast()) {
+        $tenant->update(['status' => 'expired', 'on_trial' => false]);
+        return redirect()->route('tenant.billing');
+    }
+    
+    // 4. Active plan expired — auto mark
+    if ($tenant->status === 'active' && $tenant->will_expire_at && $tenant->will_expire_at->isPast()) {
         $tenant->update(['status' => 'expired']);
         return redirect()->route('tenant.billing');
     }
     
-    // Active plan expired — auto mark
-    if ($tenant->status === 'active' && $tenant->will_expire_at && $tenant->will_expire_at->isPast()) {
-        $tenant->update(['status' => 'expired']);
-        return redirect()->route('tenant.billing');
+    // 5. Email verification check (ONLY for active/renewed accounts — FREE TRIAL BASS PASS)
+    if ($tenant->status === 'active' && !$user->hasVerifiedEmail()) {
+        return redirect()->route('tenant.verification.notice')
+            ->with('status', 'Please verify your email first.');
     }
     
     // Suspended
@@ -121,7 +125,7 @@ Route::get('/tenant/billing', function () {
 // ==========================================
 
 // ── Main Protected Routes ──
-Route::middleware(['auth', 'active.user', 'email.verified', 'two-factor.verified', 'check.branch', 'tenant.identifier', 'trial'])->group(function () {
+Route::middleware(['auth', 'tenant.identifier', 'active.user', 'email.verified', 'two-factor.verified', 'check.branch', 'trial'])->group(function () {
     
     // Clinic Dashboard Route
     Route::get('/tenant/clinic-dashboard', [App\Http\Controllers\DashboardController::class, 'clinicDashboard'])->name('tenant.clinic-dashboard');
@@ -244,7 +248,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 // Doctor Management
-Route::middleware(['auth', 'active.user', 'email.verified', 'two-factor.verified', 'check.branch', 'tenant.identifier', 'trial'])->group(function () {
+Route::middleware(['auth', 'tenant.identifier', 'active.user', 'email.verified', 'two-factor.verified', 'check.branch', 'trial'])->group(function () {
     Route::get('/doctors', [App\Http\Controllers\DoctorController::class, 'index'])->name('doctors.index');
     Route::post('/doctors', [App\Http\Controllers\DoctorController::class, 'store'])->name('doctors.store');
     Route::put('/doctors/{doctor}', [App\Http\Controllers\DoctorController::class, 'update'])->name('doctors.update');
@@ -253,7 +257,7 @@ Route::middleware(['auth', 'active.user', 'email.verified', 'two-factor.verified
 });
 
 // Staff Management 
-Route::middleware(['auth', 'active.user', 'email.verified', 'two-factor.verified', 'check.branch', 'tenant.identifier', 'trial'])->group(function () {
+Route::middleware(['auth', 'tenant.identifier', 'active.user', 'email.verified', 'two-factor.verified', 'check.branch', 'trial'])->group(function () {
     Route::get('/staff', [App\Http\Controllers\StaffController::class, 'index'])->name('staff.index');
     Route::post('/staff', [App\Http\Controllers\StaffController::class, 'store'])->name('staff.store');
     Route::put('/staff/{staff}', [App\Http\Controllers\StaffController::class, 'update'])->name('staff.update');

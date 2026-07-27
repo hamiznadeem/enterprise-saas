@@ -229,14 +229,76 @@
                     </div>
                     <div class="field">
                         <label for="city">City</label>
-                        <input type="text" id="city" name="city" value="{{ old('city') }}" required placeholder="Lahore">
+                        <select id="city" name="city" required style="width:100%;padding:0.6875rem 0.875rem;border:1.5px solid #e2e8f0;border-radius:0.625rem;font-size:0.875rem;outline:none;background:#f8fafc;color:#334155;cursor:pointer;">
+                            <option value="" disabled {{ old('city') ? '' : 'selected' }}>Select your city</option>
+                            <option value="Karachi" {{ old('city') == 'Karachi' ? 'selected' : '' }}>Karachi</option>
+                            <option value="Lahore" {{ old('city') == 'Lahore' ? 'selected' : '' }}>Lahore</option>
+                            <option value="Faisalabad" {{ old('city') == 'Faisalabad' ? 'selected' : '' }}>Faisalabad</option>
+                            <option value="Rawalpindi" {{ old('city') == 'Rawalpindi' ? 'selected' : '' }}>Rawalpindi</option>
+                            <option value="Gujranwala" {{ old('city') == 'Gujranwala' ? 'selected' : '' }}>Gujranwala</option>
+                            <option value="Peshawar" {{ old('city') == 'Peshawar' ? 'selected' : '' }}>Peshawar</option>
+                            <option value="Multan" {{ old('city') == 'Multan' ? 'selected' : '' }}>Multan</option>
+                            <option value="Hyderabad" {{ old('city') == 'Hyderabad' ? 'selected' : '' }}>Hyderabad</option>
+                            <option value="Islamabad" {{ old('city') == 'Islamabad' ? 'selected' : '' }}>Islamabad</option>
+                            <option value="Quetta" {{ old('city') == 'Quetta' ? 'selected' : '' }}>Quetta</option>
+                            <option value="Bahawalpur" {{ old('city') == 'Bahawalpur' ? 'selected' : '' }}>Bahawalpur</option>
+                            <option value="Sargodha" {{ old('city') == 'Sargodha' ? 'selected' : '' }}>Sargodha</option>
+                            <option value="Sialkot" {{ old('city') == 'Sialkot' ? 'selected' : '' }}>Sialkot</option>
+                            <option value="Sukkur" {{ old('city') == 'Sukkur' ? 'selected' : '' }}>Sukkur</option>
+                            <option value="Larkana" {{ old('city') == 'Larkana' ? 'selected' : '' }}>Larkana</option>
+                            <option value="Sheikhupura" {{ old('city') == 'Sheikhupura' ? 'selected' : '' }}>Sheikhupura</option>
+                            <option value="Rahim Yar Khan" {{ old('city') == 'Rahim Yar Khan' ? 'selected' : '' }}>Rahim Yar Khan</option>
+                            <option value="Jhang" {{ old('city') == 'Jhang' ? 'selected' : '' }}>Jhang</option>
+                            <option value="Dera Ghazi Khan" {{ old('city') == 'Dera Ghazi Khan' ? 'selected' : '' }}>Dera Ghazi Khan</option>
+                            <option value="Gujrat" {{ old('city') == 'Gujrat' ? 'selected' : '' }}>Gujrat</option>
+                            <option value="Sahiwal" {{ old('city') == 'Sahiwal' ? 'selected' : '' }}>Sahiwal</option>
+                            <option value="Wah Cantonment" {{ old('city') == 'Wah Cantonment' ? 'selected' : '' }}>Wah Cantonment</option>
+                            <option value="Mardan" {{ old('city') == 'Mardan' ? 'selected' : '' }}>Mardan</option>
+                            <option value="Kasur" {{ old('city') == 'Kasur' ? 'selected' : '' }}>Kasur</option>
+                            <option value="Okara" {{ old('city') == 'Okara' ? 'selected' : '' }}>Okara</option>
+                            <option value="Mingora" {{ old('city') == 'Mingora' ? 'selected' : '' }}>Mingora</option>
+                            <option value="Nawabshah" {{ old('city') == 'Nawabshah' ? 'selected' : '' }}>Nawabshah</option>
+                            <option value="Chiniot" {{ old('city') == 'Chiniot' ? 'selected' : '' }}>Chiniot</option>
+                            <option value="Kamoke" {{ old('city') == 'Kamoke' ? 'selected' : '' }}>Kamoke</option>
+                            <option value="Hafizabad" {{ old('city') == 'Hafizabad' ? 'selected' : '' }}>Hafizabad</option>
+                            <option value="Sadiqabad" {{ old('city') == 'Sadiqabad' ? 'selected' : '' }}>Sadiqabad</option>
+                            <option value="Mirpur Khas" {{ old('city') == 'Mirpur Khas' ? 'selected' : '' }}>Mirpur Khas</option>
+                            <option value="Burewala" {{ old('city') == 'Burewala' ? 'selected' : '' }}>Burewala</option>
+                            <option value="Kohat" {{ old('city') == 'Kohat' ? 'selected' : '' }}>Kohat</option>
+                            <option value="Muzaffargarh" {{ old('city') == 'Muzaffargarh' ? 'selected' : '' }}>Muzaffargarh</option>
+                            <option value="Khanewal" {{ old('city') == 'Khanewal' ? 'selected' : '' }}>Khanewal</option>
+                            <option value="Dera Ismail Khan" {{ old('city') == 'Dera Ismail Khan' ? 'selected' : '' }}>Dera Ismail Khan</option>
+                            <option value="Turbat" {{ old('city') == 'Turbat' ? 'selected' : '' }}>Turbat</option>
+                            <option value="Muzaffarabad" {{ old('city') == 'Muzaffarabad' ? 'selected' : '' }}>Muzaffarabad</option>
+                            <option value="Abbottabad" {{ old('city') == 'Abbottabad' ? 'selected' : '' }}>Abbottabad</option>
+                            <option value="Mandi Bahauddin" {{ old('city') == 'Mandi Bahauddin' ? 'selected' : '' }}>Mandi Bahauddin</option>
+                            <option value="Shikarpur" {{ old('city') == 'Shikarpur' ? 'selected' : '' }}>Shikarpur</option>
+                            <option value="Jacobabad" {{ old('city') == 'Jacobabad' ? 'selected' : '' }}>Jacobabad</option>
+                            <option value="Jhelum" {{ old('city') == 'Jhelum' ? 'selected' : '' }}>Jhelum</option>
+                            <option value="Khanpur" {{ old('city') == 'Khanpur' ? 'selected' : '' }}>Khanpur</option>
+                            <option value="Khairpur" {{ old('city') == 'Khairpur' ? 'selected' : '' }}>Khairpur</option>
+                            <option value="Khuzdar" {{ old('city') == 'Khuzdar' ? 'selected' : '' }}>Khuzdar</option>
+                            <option value="Pakpattan" {{ old('city') == 'Pakpattan' ? 'selected' : '' }}>Pakpattan</option>
+                            <option value="Hub" {{ old('city') == 'Hub' ? 'selected' : '' }}>Hub</option>
+                            <option value="Chaman" {{ old('city') == 'Chaman' ? 'selected' : '' }}>Chaman</option>
+                            <option value="Swabi" {{ old('city') == 'Swabi' ? 'selected' : '' }}>Swabi</option>
+                            <option value="Daska" {{ old('city') == 'Daska' ? 'selected' : '' }}>Daska</option>
+                            <option value="Haripur" {{ old('city') == 'Haripur' ? 'selected' : '' }}>Haripur</option>
+                            <option value="Taxila" {{ old('city') == 'Taxila' ? 'selected' : '' }}>Taxila</option>
+                            <option value="Gojra" {{ old('city') == 'Gojra' ? 'selected' : '' }}>Gojra</option>
+                            <option value="Gilgit" {{ old('city') == 'Gilgit' ? 'selected' : '' }}>Gilgit</option>
+                            <option value="Skardu" {{ old('city') == 'Skardu' ? 'selected' : '' }}>Skardu</option>
+                            <option value="Mirpur (AJK)" {{ old('city') == 'Mirpur (AJK)' ? 'selected' : '' }}>Mirpur (AJK)</option>
+                            <option value="Other" {{ old('city') == 'Other' ? 'selected' : '' }}>Other City</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Row 3: Location -->
-                <div class="field">
+                <!-- Row 3: Location (OpenStreetMap Nominatim Auto-Suggest) -->
+                <div class="field" style="position:relative;">
                     <label for="location">Business Location / Address</label>
-                    <input type="text" id="location" name="location" value="{{ old('location') }}" required placeholder="Shop #12, Main Market, Gulberg III">
+                    <input type="text" id="location" name="location" value="{{ old('location') }}" required placeholder="Type street / market (e.g. Main Market, Gulberg III)..." autocomplete="off" oninput="searchLocation(this.value)">
+                    <div id="locationSuggestions" style="display:none; position:absolute; left:0; right:0; top:100%; z-index:99; background:#fff; border:1px solid #cbd5e1; border-radius:0.625rem; max-height:220px; overflow-y:auto; box-shadow:0 10px 25px -5px rgba(0,0,0,0.12); margin-top:0.25rem;"></div>
                 </div>
 
                 <!-- Row 4: Web Access URL -->
@@ -373,6 +435,91 @@
             if (f.type === 'password') { f.type = 'text'; i.className = 'fa-solid fa-eye-slash'; }
             else { f.type = 'password'; i.className = 'fa-solid fa-eye'; }
         }
+
+        // ── OpenStreetMap (Nominatim API) Location Search ──
+        let locationTimeout = null;
+        function searchLocation(query) {
+            clearTimeout(locationTimeout);
+            const box = document.getElementById('locationSuggestions');
+            if (!query || query.trim().length < 3) {
+                box.style.display = 'none';
+                return;
+            }
+
+            locationTimeout = setTimeout(() => {
+                const selectedCity = document.getElementById('city').value || '';
+                const searchQuery = selectedCity ? `${query}, ${selectedCity}, Pakistan` : `${query}, Pakistan`;
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&countrycodes=pk&limit=5&addressdetails=1`;
+
+                fetch(url, { headers: { 'User-Agent': 'EnterpriseSaaS/1.0' } })
+                    .then(res => res.json())
+                    .then(data => {
+                        box.innerHTML = '';
+                        if (!data || data.length === 0) {
+                            box.style.display = 'none';
+                            return;
+                        }
+                        data.forEach(item => {
+                            const div = document.createElement('div');
+                            div.style.cssText = 'padding:0.625rem 0.875rem; border-bottom:1px solid #f1f5f9; cursor:pointer; font-size:0.8125rem; color:#334155; display:flex; align-items:center; gap:0.5rem; transition:background 0.15s;';
+                            div.innerHTML = `<i class="fa-solid fa-location-dot" style="color:#2563eb; flex-shrink:0;"></i> <span>${item.display_name}</span>`;
+                            
+                            div.onmouseover = () => div.style.background = '#f8fafc';
+                            div.onmouseout = () => div.style.background = '#fff';
+                            div.onclick = () => {
+                                document.getElementById('location').value = item.display_name;
+                                box.style.display = 'none';
+
+                                // ── Bulletproof City Auto-Selection Algorithm ──
+                                const citySelect = document.getElementById('city');
+                                let matched = false;
+
+                                // 1. Direct address fields check
+                                const addr = item.address || {};
+                                const possibleNames = [
+                                    addr.city, addr.town, addr.village, addr.municipality,
+                                    addr.county, addr.state_district, addr.suburb
+                                ].filter(Boolean);
+
+                                for (let name of possibleNames) {
+                                    const cleanName = String(name).toLowerCase();
+                                    for (let opt of citySelect.options) {
+                                        if (opt.value && (opt.value.toLowerCase() === cleanName || cleanName.includes(opt.value.toLowerCase()))) {
+                                            citySelect.value = opt.value;
+                                            matched = true;
+                                            break;
+                                        }
+                                    }
+                                    if (matched) break;
+                                }
+
+                                // 2. Fallback: Search dropdown city options inside full display_name
+                                if (!matched && item.display_name) {
+                                    const fullText = item.display_name.toLowerCase();
+                                    for (let opt of citySelect.options) {
+                                        if (opt.value && opt.value !== 'Other' && fullText.includes(opt.value.toLowerCase())) {
+                                            citySelect.value = opt.value;
+                                            break;
+                                        }
+                                    }
+                                }
+                            };
+                            box.appendChild(div);
+                        });
+                        box.style.display = 'block';
+                    })
+                    .catch(() => { box.style.display = 'none'; });
+            }, 300);
+        }
+
+        // Hide location dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const box = document.getElementById('locationSuggestions');
+            const input = document.getElementById('location');
+            if (box && e.target !== input && !box.contains(e.target)) {
+                box.style.display = 'none';
+            }
+        });
 
         // Submit loading + validation
         document.getElementById('trialForm').addEventListener('submit', function(e) {

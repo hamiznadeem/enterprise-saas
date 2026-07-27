@@ -102,7 +102,7 @@ class TrialController extends Controller
                 'tenant_id'         => $tenant->id,
                 'role'              => 'owner',
                 'is_active'         => 1,
-                'email_verified_at' => now(),
+                'email_verified_at' => null, // Leave unverified during trial; required upon renewal
             ]);
 
             if (method_exists($user, 'assignRole')) {
@@ -120,6 +120,14 @@ class TrialController extends Controller
             ]);
 
             DB::commit();
+
+            // Send Welcome Trial Email Notification
+            try {
+                $user->notify(new \App\Notifications\WelcomeTrialNotification($tenant, $validated['email'], $trialDays));
+            } catch (\Exception $mailEx) {
+                // Log mail exception if SMTP fails silently
+                \Illuminate\Support\Facades\Log::error('Trial Welcome Email Failed: ' . $mailEx->getMessage());
+            }
 
             Auth::login($user);
 

@@ -28,7 +28,20 @@
             'store': 'Store & Business Profile',
             'sales_setup': 'Sales Setup',
             'inventory_setup': 'Inventory Setup',
-            'tax_setup': 'Tax Setup',
+            'invoice_templates': 'Invoice Templates & Series',
+            'tax_setup': 'Complete Tax Engine & Tax Setup',
+            'shift_customer_policies': 'Shift, Cash & Customer Policies',
+            'accounting_setup': 'Accounting & Financial Setup',
+            'expense_setup': 'Expense Management Setup',
+            'restaurant_setup': 'Restaurant & KDS Setup',
+            'promotions_setup': 'Promotions & Coupons Setup',
+            'manufacturing_setup': 'Manufacturing & BOM Setup',
+            'purchase_setup': 'Supplier & Purchase Settings',
+            'hr_setup': 'Employee & HR Payroll Setup',
+            'api_keys_setup': 'API Keys & Tokens UI',
+            'ai_setup': 'AI Assistant & Forecasting Setup',
+            'import_export_setup': 'Data Import & Export Center',
+            'einvoicing_setup': 'Standardized E-Invoicing',
             'accounts_setup': 'Default Accounts',
             'footers_dayclose': 'Footers & Day Close',
             'email_sms_setup': 'Email & SMS Setup',
@@ -125,7 +138,7 @@
                     Sales Setup
                 </button>
 
-                <!-- Tab 4: Inventory Setup -->
+                <!-- Tab 3: Inventory Setup -->
                 <button @click="activeTab = 'inventory_setup'"
                     :class="activeTab === 'inventory_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
                     class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
@@ -133,15 +146,119 @@
                     Inventory Setup
                 </button>
 
-                <!-- Tab 5: Tax Setup -->
+                <!-- Tab 4: Invoice Templates & Series -->
+                <button @click="activeTab = 'invoice_templates'"
+                    :class="activeTab === 'invoice_templates' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-file-invoice text-sm"></i>
+                    Invoice Templates & Series
+                </button>
+
+                <!-- Tab 5: Complete Tax Engine & Setup -->
                 <button @click="activeTab = 'tax_setup'"
                     :class="activeTab === 'tax_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
                     class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
-                    <i class="fa-solid fa-percent text-sm"></i>
-                    Tax Setup
+                    <i class="fa-solid fa-calculator text-sm"></i>
+                    Complete Tax Engine & Setup
                 </button>
 
-                <!-- Tab 6: Default Accounts -->
+                <!-- Tab 6: Shift, Cash & Customer Policies -->
+                <button @click="activeTab = 'shift_customer_policies'"
+                    :class="activeTab === 'shift_customer_policies' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-user-clock text-sm"></i>
+                    Shifts, Cash & Policies
+                </button>
+
+                <!-- Tab 7: Accounting & Financial Setup -->
+                <button @click="activeTab = 'accounting_setup'"
+                    :class="activeTab === 'accounting_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-building-columns text-sm"></i>
+                    Accounting & Ledgers
+                </button>
+
+                <!-- Tab 8: Expense Management Setup -->
+                <button @click="activeTab = 'expense_setup'"
+                    :class="activeTab === 'expense_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-wallet text-sm"></i>
+                    Expense Setup
+                </button>
+
+                <!-- Tab 9: Restaurant & KDS Setup -->
+                <button @click="activeTab = 'restaurant_setup'"
+                    :class="activeTab === 'restaurant_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-utensils text-sm"></i>
+                    Restaurant & KDS
+                </button>
+
+                <!-- Tab 10: Promotions & Coupons Setup -->
+                <button @click="activeTab = 'promotions_setup'"
+                    :class="activeTab === 'promotions_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-ticket text-sm"></i>
+                    Promotions & Coupons
+                </button>
+
+                <!-- Tab 11: Manufacturing & BOM Setup -->
+                <button @click="activeTab = 'manufacturing_setup'"
+                    :class="activeTab === 'manufacturing_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-industry text-sm"></i>
+                    Manufacturing & BOM
+                </button>
+
+                <!-- Tab 12: Supplier & Purchase Settings -->
+                <button @click="activeTab = 'purchase_setup'"
+                    :class="activeTab === 'purchase_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-truck-field text-sm"></i>
+                    Supplier & Purchase
+                </button>
+
+                <!-- Tab 13: Employee & HR Payroll Setup -->
+                <button @click="activeTab = 'hr_setup'"
+                    :class="activeTab === 'hr_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-users-gear text-sm"></i>
+                    Employee & HR Payroll
+                </button>
+
+                <!-- Tab 14: API Keys & Tokens UI -->
+                <button @click="activeTab = 'api_keys_setup'"
+                    :class="activeTab === 'api_keys_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-key text-sm"></i>
+                    API Keys & Tokens
+                </button>
+
+                <!-- Tab 15: AI Assistant & Forecasting Setup -->
+                <button @click="activeTab = 'ai_setup'"
+                    :class="activeTab === 'ai_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                    AI & Forecasting
+                </button>
+
+                <!-- Tab 16: Bulk Import / Export Data Center -->
+                <button @click="activeTab = 'import_export_setup'"
+                    :class="activeTab === 'import_export_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-file-import text-sm"></i>
+                    Import / Export Data
+                </button>
+
+                <!-- Tab 17: Standardized E-Invoicing -->
+                <button @click="activeTab = 'einvoicing_setup'"
+                    :class="activeTab === 'einvoicing_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
+                    <i class="fa-solid fa-file-code text-sm"></i>
+                    E-Invoicing Standards
+                </button>
+
+                <!-- Tab 18: Default Accounts -->
                 <button @click="activeTab = 'accounts_setup'"
                     :class="activeTab === 'accounts_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
                     class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
@@ -149,7 +266,7 @@
                     Default Accounts
                 </button>
 
-                <!-- Tab 7: Footers & Day Close -->
+                <!-- Tab 19: Footers & Day Close -->
                 <button @click="activeTab = 'footers_dayclose'"
                     :class="activeTab === 'footers_dayclose' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
                     class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
@@ -157,7 +274,7 @@
                     Footers & Day Close
                 </button>
 
-                <!-- Tab 8: Email & SMS Setup -->
+                <!-- Tab 20: Email & SMS Setup -->
                 <button @click="activeTab = 'email_sms_setup'"
                     :class="activeTab === 'email_sms_setup' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
                     class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
@@ -165,7 +282,7 @@
                     Email & SMS Setup
                 </button>
 
-                <!-- Tab 9: Receipt Layout & Logo Branding -->
+                <!-- Tab 21: Receipt Layout & Logo Branding -->
                 <button @click="activeTab = 'receipt_layout'"
                     :class="activeTab === 'receipt_layout' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
                     class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
@@ -173,7 +290,7 @@
                     Branding & Receipt Layout
                 </button>
 
-                <!-- Tab 10: Security & System -->
+                <!-- Tab 22: Security & System -->
                 <button @click="activeTab = 'security'"
                     :class="activeTab === 'security' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
                     class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-150">
@@ -1042,40 +1159,755 @@
             </div>
 
             <!-- ══════════════════════════════════════════════════════════════ -->
-            <!-- TAB 5: TAX SETUP                                               -->
+            <!-- TAB 4: INVOICE TEMPLATES & NUMBER SERIES SETTINGS (#31 & #32) -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'invoice_templates'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice text-indigo-600"></i> Invoice Templates & Document Numbering Series
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Thermal, A4 & Number Series</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-4 bg-gray-50/50 space-y-3">
+                        <h3 class="font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-print text-indigo-600"></i> Thermal Receipt Layout
+                        </h3>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Thermal Paper Width</label>
+                                <select name="thermal_paper_size" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                    <option value="80mm" selected>80mm (Standard POS Receipt)</option>
+                                    <option value="58mm">58mm (Mini Thermal Receipt)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Font Family & Size</label>
+                                <select name="thermal_font" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                    <option value="monospace" selected>Monospace (Receipt Printer Default)</option>
+                                    <option value="sans-serif">Sans-Serif Modern</option>
+                                </select>
+                            </div>
+                            <label class="flex items-center gap-2 cursor-pointer pt-1">
+                                <input type="checkbox" name="show_watermark" checked class="w-4 h-4 text-indigo-600 rounded">
+                                <span class="font-medium text-gray-800">Print Paid Watermark Stamp on Receipt</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-4 bg-gray-50/50 space-y-3">
+                        <h3 class="font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-file-contract text-indigo-600"></i> A4 Corporate Invoice Template
+                        </h3>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Select Active A4 Theme</label>
+                                <select name="a4_invoice_theme" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                    <option value="modern_blue" selected>Modern Slate & Indigo Header</option>
+                                    <option value="classic_corporate">Classic Black & White Bordered</option>
+                                    <option value="minimalist">Minimalist Clean Layout</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Upload Digital Stamp Signature Image</label>
+                                <input type="file" name="digital_stamp" class="w-full px-3 py-1 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <label class="flex items-center gap-2 cursor-pointer pt-1">
+                                <input type="checkbox" name="show_fbr_qr" checked class="w-4 h-4 text-indigo-600 rounded">
+                                <span class="font-medium text-gray-800">Print FBR / Tax Authority QR Code</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Number Series Settings (#32) -->
+                <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-indigo-200 rounded-xl p-5 bg-indigo-50/30 space-y-4">
+                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-list-ol text-indigo-600"></i> Number Series & Prefix Settings (#32)
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Sales Invoice Prefix</label>
+                            <input type="text" name="prefix_sales_invoice" value="INV-" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono uppercase">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Purchase Order Prefix</label>
+                            <input type="text" name="prefix_purchase_order" value="PO-" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono uppercase">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Quotation Prefix</label>
+                            <input type="text" name="prefix_quotation" value="QT-" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono uppercase">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Sales Return Prefix</label>
+                            <input type="text" name="prefix_sales_return" value="SR-" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono uppercase">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Invoice Templates & Number Series settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('invoice_templates')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Templates</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 6: SHIFTS, CASH & CUSTOMER POLICIES                        -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'shift_customer_policies'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-user-clock text-indigo-600"></i> Shifts, Cash Register & Customer Policies
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Shift, Credit Limit & Returns</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <!-- Shift & Register Settings -->
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-4">
+                        <h3 class="font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-cash-register text-indigo-600"></i> Cash Register & Shift Rules
+                        </h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Opening Cash Float Requirement</label>
+                                <select name="require_opening_float" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                    <option value="mandatory" selected>Mandatory Enter Cash Float at Shift Start</option>
+                                    <option value="optional">Optional</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Max Cash Limit Warning in Drawer (PKR)</label>
+                                <input type="number" name="drawer_cash_limit" value="100000" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                            </div>
+                            <label class="flex items-center gap-2 cursor-pointer pt-1">
+                                <input type="checkbox" name="blind_close_shift" checked class="w-4 h-4 text-indigo-600 rounded">
+                                <span class="font-medium text-gray-800">Enable Blind Shift Close (Hide system total before cashier counts cash)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Customer Credit & Return Policies -->
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-4">
+                        <h3 class="font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-user-shield text-indigo-600"></i> Customer Credit & Return Rules
+                        </h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Default Customer Credit Limit (PKR)</label>
+                                <input type="number" name="default_customer_credit_limit" value="50000" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-gray-700 mb-1">Max Return Window (Days)</label>
+                                    <input type="number" name="return_window_days" value="7" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-gray-700 mb-1">Restocking Fee (%)</label>
+                                    <input type="number" name="restocking_fee_percent" value="0.00" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Shift & Customer Policies settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('shift_customer_policies')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Policies</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 7: ACCOUNTING & FINANCIAL SETUP (#37)                     -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'accounting_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-building-columns text-indigo-600"></i> Full Double-Entry Accounting Settings (#37)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Chart of Accounts, JV & Fiscal Year</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Financial Year Start Month</label>
+                        <select name="fy_start_month" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="7" selected>July (Pakistan Fiscal Year Jul-Jun)</option>
+                            <option value="1">January (Calendar Year Jan-Dec)</option>
+                        </select>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Fiscal Lock Date (Prevent past edits)</label>
+                        <input type="date" name="fiscal_lock_date" value="2026-06-30" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none">
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Journal Voucher Prefix</label>
+                        <input type="text" name="jv_prefix" value="JV-" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono uppercase">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Accounting & Financial settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('accounting_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Accounting Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 8: EXPENSE MANAGEMENT SETUP (#38)                         -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'expense_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-wallet text-indigo-600"></i> Expense Categories & Approval Workflows (#38)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Approvals & Receipt Attachments</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Manager Approval Required Threshold (PKR)</label>
+                        <input type="number" name="expense_approval_limit" value="10000" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                        <p class="text-[11px] text-gray-400">Expenses exceeding this amount require manager approval before posting to General Ledger.</p>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Require Attachment Receipt File</label>
+                        <select name="require_expense_receipt" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="Yes" selected>Yes (Require uploaded bill/receipt image)</option>
+                            <option value="No">No (Optional)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Expense Management settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('expense_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Expense Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 9: RESTAURANT & KITCHEN DISPLAY SETUP (#41)                -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'restaurant_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-utensils text-indigo-600"></i> Restaurant Table Management & KDS Setup (#41)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Tables, KDS Refresh & Service Charge</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Dine-In Service Charge (%)</label>
+                        <input type="number" step="0.01" name="dinein_service_charge" value="5.00" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">KDS Display Screen Refresh Rate (Sec)</label>
+                        <input type="number" name="kds_refresh_seconds" value="5" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Enable Mobile Waiter Ordering App</label>
+                        <select name="enable_waiter_app" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="Yes" selected>Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Restaurant & KDS settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('restaurant_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Restaurant Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 10: PROMOTIONS & COUPONS SETUP (#45)                      -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'promotions_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-ticket text-indigo-600"></i> Promotions, Discount Vouchers & BOGO Offers (#45)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Coupon Codes & BOGO Rules</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Coupon System Module Status</label>
+                        <select name="coupon_system_status" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="Active" selected>Active</option>
+                            <option value="Disabled">Disabled</option>
+                        </select>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Default Promo Coupon Prefix</label>
+                        <input type="text" name="promo_coupon_prefix" value="PROMO-" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono uppercase">
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Minimum Cart Order Value for Coupon (PKR)</label>
+                        <input type="number" name="min_coupon_cart_val" value="1000" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Promotions & Coupon settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('promotions_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Promotions Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 11: MANUFACTURING & BILL OF MATERIALS (#48)               -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'manufacturing_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-industry text-indigo-600"></i> Manufacturing, Work Orders & BOM Setup (#48)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">BOM Auto Deduct & Work Orders</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Auto-Deduct Raw Material Ingredients on Production</label>
+                        <select name="auto_deduct_bom_ingredients" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="Yes" selected>Yes (Auto deduct stock upon Work Order completion)</option>
+                            <option value="No">No (Manual stock deduction)</option>
+                        </select>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Production Work Order Number Prefix</label>
+                        <input type="text" name="work_order_prefix" value="WO-" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono uppercase">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Manufacturing & BOM settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('manufacturing_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Manufacturing Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 12: SUPPLIER & PURCHASE SETTINGS (#9 & #12)               -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'purchase_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-truck-field text-indigo-600"></i> Supplier Portal & Purchasing Workflow Settings (#9 & #12)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">PO Threshold & GRN Stock Update</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">PO Approval Limit (PKR)</label>
+                        <input type="number" name="po_approval_limit" value="250000" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Auto-Update Item Cost Price from GRN</label>
+                        <select name="auto_update_cost_grn" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="Yes" selected>Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Default Supplier Credit Term Days</label>
+                        <input type="number" name="default_supplier_credit_days" value="30" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Supplier & Purchase settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('purchase_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Purchase Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 13: EMPLOYEE & HR PAYROLL SETUP (#13)                      -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'hr_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-users-gear text-indigo-600"></i> Employee HR, Sales Commissions & Payroll Rules (#13)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Commissions & Overtime Multipliers</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Sales Commission Calculation Basis</label>
+                        <select name="commission_basis" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="net_sales" selected>Percentage of Net Sales Amount</option>
+                            <option value="gross_profit">Percentage of Gross Profit Margin</option>
+                        </select>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Default Staff Sales Commission (%)</label>
+                        <input type="number" step="0.01" name="default_commission_rate" value="2.50" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Overtime Hourly Pay Multiplier</label>
+                        <input type="number" step="0.1" name="overtime_multiplier" value="1.5" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Employee HR & Payroll settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('hr_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save HR Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 14: API KEYS & REST API INTEGRATION (#25)                  -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'api_keys_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-key text-indigo-600"></i> REST API Access Tokens & Developer Keys (#25)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Rate Limiting & Webhooks</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">API Rate Limit (Requests per Minute)</label>
+                        <input type="number" name="api_rate_limit" value="120" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Enforce API Token Expiry</label>
+                        <select name="enforce_api_token_expiry" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="Yes" selected>Yes (Rotate tokens every 90 days)</option>
+                            <option value="No">No (Never expire)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves API Access settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('api_keys_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save API Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 15: AI ASSISTANT & FORECASTING SETUP (#27)                 -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'ai_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i> AI Assistant & Smart Demand Forecasting (#27)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">LLM Model & Stock Reorder Alerts</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">AI Forecasting Engine Model</label>
+                        <select name="ai_model_name" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="gpt-4o-mini" selected>GPT-4o Mini (Fast & Cost Efficient)</option>
+                            <option value="claude-3-haiku">Claude 3 Haiku</option>
+                        </select>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Smart AI Stock Reorder Recommendations</label>
+                        <select name="ai_smart_reorder" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="Enabled" selected>Enabled (Auto suggest PO quantities based on sales velocity)</option>
+                            <option value="Disabled">Disabled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves AI Assistant & Forecasting settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('ai_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save AI Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 16: DATA IMPORT & EXPORT CENTER (#50)                      -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'import_export_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-file-import text-indigo-600"></i> Data Import & Export Suite (#50)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Bulk CSV Import & Data Export</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-4">
+                        <h3 class="font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-file-csv text-emerald-600"></i> Bulk Products & Customers CSV Importer
+                        </h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Select Import Entity Type</label>
+                                <select class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                    <option value="products">Products Master Catalog (.csv)</option>
+                                    <option value="customers">Customers List (.csv)</option>
+                                    <option value="suppliers">Suppliers List (.csv)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Upload CSV File</label>
+                                <input type="file" accept=".csv" class="w-full px-3 py-1 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <button type="button" @click="showToast('✓ CSV Upload initiated!')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-sm transition">
+                                Upload & Import CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-4">
+                        <h3 class="font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-file-export text-indigo-600"></i> Full System Data Backup Exporter
+                        </h3>
+                        <p class="text-gray-500">Download clean JSON or Excel backups of your entire store catalog, ledger transactions, and sales history.</p>
+                        <div class="flex items-center gap-3 pt-2">
+                            <button type="button" @click="showToast('✓ Excel export downloaded!')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-sm transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-excel"></i> Export Excel
+                            </button>
+                            <button type="button" @click="showToast('✓ JSON export downloaded!')" class="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white font-bold rounded-lg shadow-sm transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-code"></i> Export JSON
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 17: STANDARDIZED E-INVOICING (#35)                        -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div x-show="activeTab === 'einvoicing_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+                <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
+                    <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-file-code text-indigo-600"></i> Standardized E-Invoicing JSON / XML Standards (#35)
+                    </h2>
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">UBL 2.1 Standard & Verification Hash</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">E-Invoice Schema Specification Standard</label>
+                        <select name="einvoice_schema" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="ubl_2_1" selected>UBL 2.1 XML / JSON (Peppol International Standard)</option>
+                            <option value="fbr_json">FBR Digital Invoice Standard (Pakistan)</option>
+                        </select>
+                    </div>
+
+                    <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
+                        <label class="block font-bold text-gray-800">Cryptographic Verification Hash Algorithm</label>
+                        <select name="einvoice_hash_algo" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                            <option value="sha256" selected>SHA-256 (Standard)</option>
+                            <option value="sha512">SHA-512 (High Security)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves E-Invoicing settings
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">Discard Changes</button>
+                        <button type="button" @click="saveTabSettings('einvoicing_setup')" :disabled="isSaving" class="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition disabled:opacity-50 cursor-pointer">
+                            <template x-if="!isSaving"><span><i class="fa-solid fa-floppy-disk mr-1.5"></i> Save E-Invoicing Settings</span></template>
+                            <template x-if="isSaving"><span><i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Saving...</span></template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- TAB 5: TAX SETUP & COMPLETE TAX ENGINE                        -->
             <!-- ══════════════════════════════════════════════════════════════ -->
             <div x-show="activeTab === 'tax_setup'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
                 <div class="border-b border-indigo-600 pb-2 flex items-center justify-between">
                     <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                        <i class="fa-solid fa-percent text-indigo-600"></i> Tax Setup
+                        <i class="fa-solid fa-calculator text-indigo-600"></i> Complete Tax Engine & Setup (#30 & #33)
                     </h2>
                     <button type="button" @click="showAddTaxModal = true" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
-                        <i class="fa-solid fa-plus"></i> Add Tax
+                        <i class="fa-solid fa-plus"></i> Add Tax Rate
                     </button>
                 </div>
 
-                <!-- Default Tax Setting Box -->
+                <!-- SECTION 1: GLOBAL TAX ENGINE PARAMETERS -->
+                <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="border border-indigo-200 rounded-xl p-5 bg-indigo-50/30 space-y-4">
+                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-indigo-600"></i> Global Tax Calculation Parameters (#30 & #33)
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Tax Calculation Basis</label>
+                            <select name="tax_calculation_mode" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                <option value="exclusive" selected>Tax Exclusive (Tax Added at Checkout)</option>
+                                <option value="inclusive">Tax Inclusive (Prices include Tax)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Compound Tax (Tax on Tax)</label>
+                            <select name="compound_tax_mode" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                <option value="disabled" selected>Disabled (Standard Simple Tax)</option>
+                                <option value="enabled">Enabled (Apply Tax on Tax subtotal)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Tax Rounding Rule</label>
+                            <select name="tax_rounding_rule" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                <option value="nearest" selected>Round to Nearest (2 Decimals)</option>
+                                <option value="round_up">Round Up (Ceiling)</option>
+                                <option value="round_down">Round Down (Floor)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Tax Exemption Threshold (PKR)</label>
+                            <input type="number" name="tax_exemption_threshold" value="0.00" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 outline-none font-mono">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Reverse Charge Mechanism (RCM)</label>
+                            <select name="rcm_mode" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                <option value="No" selected>Disabled</option>
+                                <option value="Yes">Enabled (B2B Buyer Self-Assessment)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Withholding Tax (WHT) Mode</label>
+                            <select name="wht_mode" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-1 focus:ring-indigo-500 outline-none">
+                                <option value="No" selected>Disabled</option>
+                                <option value="Yes">Enabled (Deduct WHT on Vendor Payments)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: DEFAULT TAX SETTING BOX -->
                 <div x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="p-4 bg-gray-50 border border-gray-200 rounded-xl flex flex-wrap items-center justify-between gap-4 text-xs">
                     <div>
-                        <label class="block font-bold text-gray-800 text-xs mb-1">Default Tax :</label>
-                        <p class="text-[11px] text-gray-500">Selected tax rate will apply by default to all new items and checkout transactions.</p>
+                        <label class="block font-bold text-gray-800 text-xs mb-1">Default Store Sales Tax Rate :</label>
+                        <p class="text-[11px] text-gray-500">Selected tax rate will apply by default to all new item checkouts unless overridden.</p>
                     </div>
                     <div class="w-full sm:w-64">
                         <select name="default_tax" class="w-full pl-3 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs bg-white font-medium">
-                            <option value="none" selected>No Tax</option>
-                            <option value="sales_tax_18">Sales Tax (18%)</option>
+                            <option value="sales_tax_18" selected>FBR Standard Sales Tax (18%)</option>
                             <option value="pra_16">PRA Provincial Sales Tax (16%)</option>
                             <option value="srb_13">SRB Service Tax (13%)</option>
+                            <option value="kpra_15">KPRA Sales Tax (15%)</option>
                             <option value="exempt_0">Exempt (0%)</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Taxes Configured Data Table -->
+                <!-- SECTION 4: TAXES CONFIGURABLE DATA TABLE -->
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider">All Configured Taxes</h3>
-                        <span class="text-xs font-semibold text-gray-500">Showing 4 Tax Rates</span>
+                        <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider">All Configured Tax Rates</h3>
+                        <span class="text-xs font-semibold text-gray-500">Showing 5 Tax Rates</span>
                     </div>
 
                     <div class="overflow-x-auto border border-gray-200 rounded-xl">
@@ -1092,8 +1924,8 @@
                             </thead>
                             <tbody class="divide-y divide-gray-100 bg-white">
                                 <tr x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="hover:bg-gray-50/80 transition">
-                                    <td class="px-4 py-3 font-semibold text-gray-900">No Tax</td>
-                                    <td class="px-4 py-3 font-mono font-bold text-gray-600">0.00 %</td>
+                                    <td class="px-4 py-3 font-semibold text-gray-900">Standard Sales Tax (FBR)</td>
+                                    <td class="px-4 py-3 font-mono font-bold text-indigo-600">18.00 %</td>
                                     <td class="px-4 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-semibold">Percentage</span></td>
                                     <td class="px-4 py-3"><span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full text-[10px] font-bold">Default Tax</span></td>
                                     <td class="px-4 py-3"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[10px] font-semibold">Active</span></td>
@@ -1102,18 +1934,7 @@
                                     </td>
                                 </tr>
                                 <tr x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="hover:bg-gray-50/80 transition">
-                                    <td class="px-4 py-3 font-semibold text-gray-900">Standard Sales Tax (FBR)</td>
-                                    <td class="px-4 py-3 font-mono font-bold text-indigo-600">18.00 %</td>
-                                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-semibold">Percentage</span></td>
-                                    <td class="px-4 py-3"><span class="text-gray-400">—</span></td>
-                                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[10px] font-semibold">Active</span></td>
-                                    <td class="px-4 py-3 text-right space-x-2">
-                                        <button type="button" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
-                                        <button type="button" class="text-rose-600 hover:text-rose-800 font-semibold text-xs"><i class="fa-solid fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="hover:bg-gray-50/80 transition">
-                                    <td class="px-4 py-3 font-semibold text-gray-900">PRA Provincial Sales Tax</td>
+                                    <td class="px-4 py-3 font-semibold text-gray-900">PRA Punjab Sales Tax</td>
                                     <td class="px-4 py-3 font-mono font-bold text-indigo-600">16.00 %</td>
                                     <td class="px-4 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-semibold">Percentage</span></td>
                                     <td class="px-4 py-3"><span class="text-gray-400">—</span></td>
@@ -1124,7 +1945,7 @@
                                     </td>
                                 </tr>
                                 <tr x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="hover:bg-gray-50/80 transition">
-                                    <td class="px-4 py-3 font-semibold text-gray-900">SRB Sindh Revenue Tax</td>
+                                    <td class="px-4 py-3 font-semibold text-gray-900">SRB Sindh Service Tax</td>
                                     <td class="px-4 py-3 font-mono font-bold text-indigo-600">13.00 %</td>
                                     <td class="px-4 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-semibold">Percentage</span></td>
                                     <td class="px-4 py-3"><span class="text-gray-400">—</span></td>
@@ -1132,6 +1953,27 @@
                                     <td class="px-4 py-3 text-right space-x-2">
                                         <button type="button" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                                         <button type="button" class="text-rose-600 hover:text-rose-800 font-semibold text-xs"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="hover:bg-gray-50/80 transition">
+                                    <td class="px-4 py-3 font-semibold text-gray-900">KPRA KPK Sales Tax</td>
+                                    <td class="px-4 py-3 font-mono font-bold text-indigo-600">15.00 %</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-semibold">Percentage</span></td>
+                                    <td class="px-4 py-3"><span class="text-gray-400">—</span></td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[10px] font-semibold">Active</span></td>
+                                    <td class="px-4 py-3 text-right space-x-2">
+                                        <button type="button" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                                        <button type="button" class="text-rose-600 hover:text-rose-800 font-semibold text-xs"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr x-show="!searchQuery || $el.innerText.toLowerCase().includes(searchQuery.toLowerCase())" class="hover:bg-gray-50/80 transition">
+                                    <td class="px-4 py-3 font-semibold text-gray-900">Tax Exempt (0%)</td>
+                                    <td class="px-4 py-3 font-mono font-bold text-gray-600">0.00 %</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-semibold">Percentage</span></td>
+                                    <td class="px-4 py-3"><span class="text-gray-400">—</span></td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[10px] font-semibold">Active</span></td>
+                                    <td class="px-4 py-3 text-right space-x-2">
+                                        <button type="button" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -1142,7 +1984,7 @@
                 <!-- Tab Save Action -->
                 <div class="flex items-center justify-between pt-4 border-t border-gray-200">
                     <div class="text-[11px] text-gray-400 flex items-center gap-1.5">
-                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves only Tax Setup settings
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> Saves Tax Engine & Pakistan FBR POS Integration settings
                     </div>
                     <div class="flex items-center gap-3">
                         <button type="reset" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">

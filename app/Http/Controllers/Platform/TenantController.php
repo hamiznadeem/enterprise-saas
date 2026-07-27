@@ -357,18 +357,14 @@ class TenantController extends Controller
             $action = 'suspended';
         } else {
             // ── REACTIVATE ──
-            // ✅ FIX: Original status preserve karo
-            // Agar trial mein tha aur time bacha hai → trial pe wapas
-            // Warna → active
-            $restoreStatus = 'active';
-
-            if ($oldStatus === 'trial' && $tenant->trial_ends_at && $tenant->trial_ends_at->isFuture()) {
-                $restoreStatus = 'trial';
-            }
+            // ✅ FIX: Check on_trial and trial_ends_at to restore 'trial' if still within trial period
+            $isStillTrial = $tenant->on_trial || ($tenant->trial_ends_at && $tenant->trial_ends_at->isFuture());
+            $restoreStatus = $isStillTrial ? 'trial' : 'active';
 
             $tenant->update([
                 'is_active' => 1,
                 'status'    => $restoreStatus,
+                'on_trial'  => $isStillTrial,
             ]);
             $action = $restoreStatus === 'trial' ? 'reactivated (trial)' : 'reactivated';
         }
